@@ -3,6 +3,7 @@
 %
 clear, clc, close all
 [data,model]= loaddata();
+stateSpaceModel=ss(model.A,model.B,model.C,model.D,0.2);
 
 u = data.u1;
 y = data.y1;
@@ -28,7 +29,6 @@ opt.SearchOption.MaxIter = 20;
 opt.Display = 'on';
 modelSim = armax(data, [19 13 20 1], opt);
 
-compare(data,modelPred,modelSim);
-
-simulate(modelSim,y,u);
+%compare(data,modelPred,modelSim);
+simulate(stateSpaceModel,modelSim,y,u);
 %for armax 19 13 20, nk=1
