@@ -1,11 +1,18 @@
-function [result,ratio] = isWhite(process, alpha, samples, opt)
+function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt)
 % isWhite(process, alpha, opt) performs the Anderson Whiteness Test for the
 % given process.
+%
+%INPUT:
 %   process: process to run the test on
 %   alpha: margin of tolerance (default alpha=0.1), the lower the better
 %   samples: percentage of samples to consider (default 0.1)
 %   opt: 'plot' (show plot) shows the interval of confidence
 %        '' nothing
+%OUTPUT:
+%   result: 1 'passed', 0 'not passed'
+%   ratio:  ratio of points outside the interval
+%   tolerances: column vector of size 2, has tolerances level for:
+%               [anderson, covariance]
    
     switch nargin
         case 1 
@@ -36,16 +43,17 @@ function [result,ratio] = isWhite(process, alpha, samples, opt)
     
     N=length(process); % number of samples
 
-    process_cov=covf(process, floor(N*samples)); %compute the covariances up to N/10
+    process_cov=covf(process, floor(N*samples)); %compute the covariances up to N*samples, 0<samples<=1
     rho=process_cov(2:end)/process_cov(1); %compute the normalized correlations (for tau>0)
     beta=norminv(1-alpha/2); %probability to land outside (-beta;+beta) is alpha
     cov_beta = (beta*process_cov(1))/sqrt(N); %tolerances for covariance
     
     nalpha=length(find(sqrt(N)*rho>beta))+length(find(sqrt(N)*rho<-beta)); %number of points outside interval
+    
     ratio=nalpha/length(rho);
-    
-    
     result = (ratio <= alpha);
+    tolerances = [beta,cov_beta];
+
     disp(['Ratio of violation: ',num2str(ratio*100),'%, alpha=',num2str(alpha), ', covariance tolerance: ',num2str(cov_beta)])
     disp(['Anderson test pass: ' num2str(result) ]);
     
