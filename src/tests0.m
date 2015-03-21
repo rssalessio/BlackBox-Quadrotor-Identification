@@ -2,20 +2,19 @@
 %
 %
 clear, clc, close all
-[data,model]= loaddata();
+[input,output,model]= loaddata();
 stateSpaceModel=ss(model.A,model.B,model.C,model.D,0.2);
 
-u = data.u1;
-y = data.y1;
+u = input.u1;
+y = output.y1;
 
-u = data.separated.A.ol1;
-y = y(614:1611);
+u = input.prbs1;
+y = output.prbs1;%y(614:1611);
 
 u = u(100:end-100);
 y = y(100:end-100);
 
 data=iddata(y,u);
-
 
 %%
 %plotCov(y,30);

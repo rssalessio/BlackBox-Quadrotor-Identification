@@ -1,6 +1,14 @@
-function [data,model]=loaddata()
-    data=load('../data/dati_qr.mat');
-    data.separated = load('../data/input.mat');
-    data.st = 20*10^(-3); %sampling time
-    model=load('../data/modello.mat');
+function [input, output, ssmodel] = loaddata(opt)
+%loaddata(opt) returns all the data gathered during the experiment and the
+%state-space model identified.
+%Returns: (1) input data, (2) output data, (3) model. All of them are
+%stored in a struct.
+
+        input = load('../data/input.mat'); 
+        output = load('../data/output.mat');
+        ssmodel = load('../data/ssmodel.mat');
+        
+        input = input.input;
+        output = output.output;
+        ssmodel = ssmodel.ssmodel;
 end
