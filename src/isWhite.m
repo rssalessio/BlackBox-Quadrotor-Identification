@@ -7,6 +7,7 @@ function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt, plotT
 %   alpha: margin of tolerance (default alpha=0.1), the lower the better
 %   samples: percentage of samples to consider (default 0.1)
 %   opt: 'plot' (show plot) shows the interval of confidence
+%        'nooutput' no output at all
 %        '' nothing
 %OUTPUT:
 %   result: 1 'passed', 0 'not passed'
@@ -24,6 +25,8 @@ function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt, plotT
             opt = '';
         case 3
             opt = '';
+        case 4
+            plotTitle = ' ';
     end
     
     if size(process,2) ~= 1
@@ -53,6 +56,10 @@ function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt, plotT
     ratio=nalpha/length(rho);
     result = (ratio <= alpha);
     tolerances = [beta,cov_beta];
+    
+    if strcmp(opt,'nooutput')
+        return;
+    end
 
     disp(['Ratio of violation: ',num2str(ratio*100),'%, alpha=',num2str(alpha), ', covariance tolerance: ',num2str(cov_beta)])
     disp(['Anderson test pass: ' num2str(result) ]);
