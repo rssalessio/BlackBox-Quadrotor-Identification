@@ -1,4 +1,4 @@
-function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt)
+function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt, plotTitle)
 % isWhite(process, alpha, opt) performs the Anderson Whiteness Test for the
 % given process.
 %
@@ -69,7 +69,7 @@ function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt)
         plot(1:length(rho),sqrt(N)*rho,'ko'); hold on;
         ylabel('sqrt(\rho)')
         xlabel('N');
-        title('Anderson Test');
+        title(['Anderson Test - ', plotTitle]);
         legend('Tolerance');
         
         
@@ -82,7 +82,7 @@ function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt)
         grid;
         xlabel('N');
         ylabel('Cov');
-        title('Covariance input');
+        title(['Covariance input - ', plotTitle]);
     end
    
 
