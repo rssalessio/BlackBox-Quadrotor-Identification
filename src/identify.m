@@ -14,6 +14,10 @@ function [finalModel] = identify(u, y, opt)
         case 2
             opt = identifyOptions;
     end
+    
+    if (isa(opt, 'identifyOptions')==0)
+        error('Opt has to be an object of type identifyOptions');
+    end
  
     if strcmp(opt.modelType,'arx')
         opt.maxOrders(3:4) = [ 1 1 ];

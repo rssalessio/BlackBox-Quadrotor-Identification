@@ -9,11 +9,14 @@ opt.modelType = 'oe';
 opt.maxOrders = [ 5 5 5 5 3];
 
 disp('OE model');
-modelOE = identify(in.prbs1,out.prbs1,opt);
+modelOE = identify(in.u1,out.y1,opt);
 
 opt.modelType ='arx';
 disp('ARX model');
-modelARX = identify(in.prbs1,out.prbs1,opt);
+modelARX = identify(in.u1,out.y1,opt);
 
 
 modelOE, modelARX
+%%
+simulate(in.u1,out.y1, modelOE, mod);
+simulate(in.u1,out.y1, modelARX, mod);

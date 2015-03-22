@@ -24,7 +24,7 @@ function []=simulate(u,y,TFModel,SSMModel)
     %plot(t,u); grid; legend('Input'); xlabel('Time'); ylabel('Output');
     
     
-    yerr = [abs(y-ysim)'; abs(y-yssm)'; abs(ysim-yssm)'];
+    yerr = [abs(y-ysim)'; abs(y-yssm)'; (ysim-yssm)'];
     yerr_mean = [mean(yerr(1,:)); mean(yerr(2,:));mean(yerr(3,:))];
     yerr_var = [var(yerr(1,:)); var(yerr(2,:));var(yerr(3,:))];
     yerr_nomean = yerr-yerr_mean*ones(1,size(yerr,2));
@@ -39,7 +39,7 @@ function []=simulate(u,y,TFModel,SSMModel)
     subplot(4,1,3);
     plot(t,yerr(1,:),t,yerr(2,:));grid;legend('Absolute Error abs(Data-TF)', 'Absolute Error abs(Data-SSM)'); xlabel('Time'); ylabel('Absolute Error');
     subplot(4,1,4);
-    plot(t,yerr(3,:)); grid; legend('Absolute Error abs(TF-SSM)'); xlabel('Time'); ylabel('Absolute error');
+    plot(t,yerr(3,:)); grid; legend('Error (TF-SSM)'); xlabel('Time'); ylabel('Absolute error');
     
     
     disp(['[TF  SIMULATION]  Mean absolute error: ' num2str(yerr_mean(1)) ' - Variance absolute error: ' num2str(yerr_var(1))]);
