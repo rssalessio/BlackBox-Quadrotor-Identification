@@ -11,5 +11,5 @@ function [input, output, ssmodel] = loaddata()
         input = input.input;
         output = output.output;
         ssmodel = ssmodel.ssmodel;
-        ssmodel = ss(ssmodel.A,ssmodel.B,ssmodel.C,ssmodel.D);
+        ssmodel = ss(ssmodel.A,ssmodel.B,ssmodel.C,ssmodel.D, 20*1e-3);
 end
