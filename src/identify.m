@@ -52,9 +52,20 @@ function [finalModel] = identify(u, y, opt)
         maxNk = opt.maxOrders(5);
     end
     
-    J = inf; %variance of PE (eps)
-    finalModel = 0;
+    if (strcmp(opt.cost, 'variance'))
+        J = inf; %variance of PE (eps)
+    elseif strcmp(opt.cost, 'fpe')
+        J = inf;
+    elseif strcmp(opt.cost, 'aic')
+        J = inf;
+    elseif strcmp(opt.cost, 'fit')
+        J = 100;
+    else
+        error('Invalid cost objective, check identifyOptions');
+    end
     
+        finalModel = 0;
+
     for na=1:opt.maxOrders(1)
         for nb=1:opt.maxOrders(2)
             for nc=1:opt.maxOrders(3)
@@ -63,15 +74,25 @@ function [finalModel] = identify(u, y, opt)
                         orders =[na nb nc nd];
                         idModel = idFunc(data, [orders(1:numOrders) nk], idFuncOpt);
 
-                        ysim = sim(idModel, u);
-                        eps = y - ysim;
-                        Jtemp = var(eps);
+                        if (strcmp(opt.cost, 'variance'))
+                            ysim = sim(idModel, u);
+                            eps = y - ysim;
+                            Jtemp = var(eps);
+                            [~,ratio,~] = isWhite(eps,0.1,0.1,'nooutput');
+                        elseif strcmp(opt.cost, 'fpe')
+                            Jtemp = fpe(idModel);
+                        elseif strcmp(opt.cost, 'aic')
+                            Jtemp = aic(idModel);
+                        elseif strcmp(opt.cost, 'fit')
+                            Jtemp = 100-idModel.Report.Fit.FitPercent;
+                        end
 
-                        [~,ratio,~] = isWhite(eps,0.1,0.1,'nooutput');
+                        
 
                         if (Jtemp < J)
                             if opt.output
-                                disp(['New model with orders ' num2str(orders) ' - J: ' num2str(Jtemp) ' isWhite ratio: ' num2str(ratio)]);
+                                disp(['New model with orders ' num2str([orders(1:numOrders) nk]) ' - J: ' num2str(Jtemp) ]);
+                                %' isWhite ratio: ' num2str(ratio)
                             end
 
                             finalModel = idModel;
