@@ -8,7 +8,8 @@ classdef identifyOptions
         modelType = 'arx'; %arx, armax, oe, bj
         target = 'simulation';       %identification target: either simulation  or prediction
         output = true;       %true to print output, otherwise false
-
+        validationType = 'self'; % self to validate with itself, ext to validate with external data
+        validationData = 0;
         cost = 'variance';     %select best model based either on : variance error (variance), aic (aic), fpe (fpe) or fit percentage (fit)
     end
 end

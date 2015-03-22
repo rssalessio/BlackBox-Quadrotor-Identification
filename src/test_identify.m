@@ -17,14 +17,5 @@ modelARX = identify(in.u1,out.y1,opt);
 
 
 modelOE, modelARX
-<<<<<<< HEAD
+compare(in.u1,out.y1,modelARX,modelOE);
 
-compare(in.u1,out.y1,modelARX,modelOE)
-
-simulate(in.u1,out.y1,modelOE,mod)
-simulate(in.u1,out.y1,modelARX,mod)
-=======
-%%
-simulate(in.u1,out.y1, modelOE, mod);
-simulate(in.u1,out.y1, modelARX, mod);
->>>>>>> origin/master

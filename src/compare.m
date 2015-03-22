@@ -1,6 +1,6 @@
 function []=compare(u,y,Model1,Model2)
-% simulate(u,y, TFModel, SSMModel) performs a simulation comparison between
-% the TF Model and the SSM Model, based on input and output data (u,y)
+% compare(u,y, model1, model2) performs a simulation comparison between
+% the 1st model and the 2nd model, based on input and output data (u,y)
 %
 %INPUT:
 %   u: input 
@@ -27,7 +27,7 @@ function []=compare(u,y,Model1,Model2)
     plot(t,y,t,ysim1,t,ysim2); grid; legend('Data', Model1.Name, Model2.Name); xlabel('Time'); ylabel('Output');    
     
     %Compute absolute error
-    yerr = [abs(y-ysim1)'; abs(y-ysim2)'; abs(ysim1-ysim2)'];
+    yerr = [abs(y-ysim1)'; abs(y-ysim2)'; (ysim1-ysim2)'];
     yerr_mean = [mean(yerr(1,:)); mean(yerr(2,:));mean(yerr(3,:))];
     yerr_var = [var(yerr(1,:)); var(yerr(2,:));var(yerr(3,:))];
     yerr_nomean = yerr-yerr_mean*ones(1,size(yerr,2));
@@ -55,8 +55,8 @@ function []=compare(u,y,Model1,Model2)
 
     N=floor(length(yerr_nomean)*0.1);
     coverr1 = covf(yerr_nomean(1,:)',N);
-    coverr2= covf(yerr_nomean(2,:)',N);
-    coverr3=covf(yerr_nomean(3,:)',N);
+    coverr2 = covf(yerr_nomean(2,:)',N);
+    coverr3 = covf(yerr_nomean(3,:)',N);
     t=1:N;
     
     figure;   
