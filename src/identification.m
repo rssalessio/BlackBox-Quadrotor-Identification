@@ -24,11 +24,7 @@ function [finalModel] = identification(u, y, modelType, maxOrders, idOpt)
     end
     
     numOrders = 4;
-    
-    
-    
-    
-    
+ 
     if strcmp(modelType,'arx')
         maxOrders(3:4) = [1 1];
         idFunc = @arx;
@@ -52,7 +48,7 @@ function [finalModel] = identification(u, y, modelType, maxOrders, idOpt)
     opt.Focus = idOpt;
     
     orders = [ 1 1 1 1 ];
-    J = 0;
+    J = -1;
     
     for na=1:maxOrders(1)
         for nb=1:maxOrders(2)
@@ -61,14 +57,12 @@ function [finalModel] = identification(u, y, modelType, maxOrders, idOpt)
                     orders =[na nb nc nd];
                     idModel = idFunc(data, [orders(1:numOrders) nk], opt);
                     if (idModel.Report.Fit.FitPercent > J)
-                        disp(['New model with orders ' num2str([orders(1:numOrders)]) ' - J: ' num2str(J)]);
-                        finalModel = idModel;
                         J = idModel.Report.Fit.FitPercent;
+                        disp(['New model with orders ' num2str([orders(1:numOrders) nk]) ' - J: ' num2str(J)]);
+                        finalModel = idModel;
                     end
                 end
             end
         end
     end
-    
-
 end
