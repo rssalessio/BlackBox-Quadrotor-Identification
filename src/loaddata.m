@@ -1,4 +1,4 @@
-function [input, output, ssmodel] = loaddata(opt)
+function [input, output, ssmodel] = loaddata()
 %loaddata(opt) returns all the data gathered during the experiment and the
 %state-space model identified.
 %Returns: (1) input data, (2) output data, (3) model. All of them are
@@ -11,4 +11,5 @@ function [input, output, ssmodel] = loaddata(opt)
         input = input.input;
         output = output.output;
         ssmodel = ssmodel.ssmodel;
+        ssmodel = ss(ssmodel.A,ssmodel.B,ssmodel.C,ssmodel.D);
 end
