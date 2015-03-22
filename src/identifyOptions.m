@@ -1,0 +1,3 @@
+function [opt] = identifyOptions()
+
+end
