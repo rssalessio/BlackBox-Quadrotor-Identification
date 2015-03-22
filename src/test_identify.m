@@ -2,16 +2,29 @@ clear all, clc, close all;
 
 [in,out,mod] = loaddata();
 
-disp('OE model');
-modelOE = identify(in.prbs1,out.prbs1,'oe',[5 5 5], 'simulation', 'out');
+opt = identifyOptions;
+opt.inputDelayAuto = false;
+opt.cost ='fit';
+opt.modelType = 'oe';
+opt.maxOrders = [ 5 5 5 5 3];
 
+disp('OE model');
+modelOE = identify(in.u1,out.y1,opt);
+
+opt.modelType ='arx';
 disp('ARX model');
-modelARX = identify(in.prbs1,out.prbs1,'arx',[5 5 5], 'simulation', 'out');
+modelARX = identify(in.u1,out.y1,opt);
 
 
 modelOE, modelARX
+<<<<<<< HEAD
 
 compare(in.u1,out.y1,modelARX,modelOE)
 
 simulate(in.u1,out.y1,modelOE,mod)
 simulate(in.u1,out.y1,modelARX,mod)
+=======
+%%
+simulate(in.u1,out.y1, modelOE, mod);
+simulate(in.u1,out.y1, modelARX, mod);
+>>>>>>> origin/master

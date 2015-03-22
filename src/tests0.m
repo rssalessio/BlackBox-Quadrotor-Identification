@@ -4,7 +4,7 @@
 clear, clc, close all
 [input,output,model]= loaddata();
 stateSpaceModel=ss(model.A,model.B,model.C,model.D,0.2);
-
+simulate(i.u1,o.y1,model,
 u = input.u1;
 y = output.y1;
 
