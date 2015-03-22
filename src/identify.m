@@ -1,4 +1,4 @@
-function [finalModel] = identify(u, y, modelType, maxOrders, idOpt)
+function [finalModel] = identify(u, y, modelType, maxOrders, idOpt, outputOption)
 % identification(u,y,modelType,idOpt) identifies a polynomial model based on data
 % (u,y)
 %INPUT:
@@ -18,11 +18,21 @@ function [finalModel] = identify(u, y, modelType, maxOrders, idOpt)
         case 3
             maxOrders = [20 20 20 20];
             idOpt = 'simulation';
+            outputOption = 'nooutput';
         case 4
             idOpt = 'simulation';
+            outputOption = 'nooutput';
+        case 5
+            outputOption = 'nooutput';
     end
     
     numOrders = 4;
+    
+    if strcmp(outputOption, 'nooutput')
+        outputOption = 0;
+    else
+        outputOption = 1;
+    end
  
     if strcmp(modelType,'arx')
         if length(maxOrders) ~= 3
@@ -86,7 +96,10 @@ function [finalModel] = identify(u, y, modelType, maxOrders, idOpt)
                     [~,ratio,~] = isWhite(eps,0.1,0.1,'nooutput');
                     
                     if (Jtemp < J)
-                        disp(['New model with orders ' num2str(orders) ' - J: ' num2str(Jtemp) ' isWhite ratio: ' num2str(ratio)]);
+                        if outputOption
+                            disp(['New model with orders ' num2str(orders) ' - J: ' num2str(Jtemp) ' isWhite ratio: ' num2str(ratio)]);
+                        end
+                        
                         finalModel = idModel;
                         J = Jtemp;
                     end

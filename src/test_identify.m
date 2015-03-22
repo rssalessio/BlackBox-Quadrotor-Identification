@@ -2,10 +2,11 @@ clear all, clc, close all;
 
 [in,out,mod] = loaddata();
 
-disp('ID model by Fit');
-modelFit = identification(in.prbs1,out.prbs1,'oe',[5 5], 'simulation');
+disp('OE model');
+modelOE = identify(in.prbs1,out.prbs1,'oe',[5 5 5], 'simulation', 'out');
 
-disp('ID model by PE');
-modelPE = identify(in.prbs1,out.prbs1,'oe',[5 5 5], 'simulation');
+disp('ARX model');
+modelARX = identify(in.prbs1,out.prbs1,'arx',[5 5 5], 'simulation', 'out');
 
-modelFit, modelPE
+
+modelOE, modelARX
