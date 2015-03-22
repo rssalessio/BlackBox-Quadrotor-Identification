@@ -13,7 +13,8 @@ function [finalModel] = identify(u, y, modelType, maxOrders, idOpt, outputOption
 %   finalModel: model identified
 
     data = iddata(y,u);
-    
+    nk = delayest(data); %estimate time delay (dead time) - also a step response could be used(it's the difference between the first u!= 0 and y!=0)
+
     switch(nargin)
         case 3
             maxOrders = [20 20 20 20];
@@ -35,37 +36,34 @@ function [finalModel] = identify(u, y, modelType, maxOrders, idOpt, outputOption
     end
  
     if strcmp(modelType,'arx')
-        if length(maxOrders) ~= 3
-            error('arx model needs 3 orders specifications: na, nb, delay');
-            return;
+        if length(maxOrders) ~= 2
+            error('arx model needs 2 orders specifications: na, nb');
         end
-        maxOrders = [maxOrders(1:2) 1 maxOrders(3)];
+        maxOrders = [maxOrders(1:2) 1 1];
         idFunc = @arx;
         opt = arxOptions;
         numOrders = 2;
         
     elseif strcmp(modelType, 'oe')
-        if length(maxOrders) ~= 3
-            error('oe model needs 3 orders specifications: na, nb, delay');
-            return;  
+        if length(maxOrders) ~= 2
+            error('oe model needs 2 orders specifications: na, nb');
         end
-        maxOrders = [maxOrders(1:2) 1 maxOrders(3)];
+        maxOrders = [maxOrders(1:2) 1 1];
         idFunc = @oe;
         opt = oeOptions;
         numOrders = 2;
         
     elseif strcmp(modelType, 'armax')
-        if length(maxOrders) ~= 4
-            error('armax model needs 4 orders specifications: na, nb, nc, delay');
-            return;           
+        if length(maxOrders) ~= 3
+            error('armax model needs 3 orders specifications: na, nb, nc');        
         end
         
         idFunc = @armax;
         opt = armaxOptions;
         numOrders = 3;
     elseif strcmp(modelType, 'bj')
-        if length(maxOrders) ~= 5
-            error('bj model needs 5 orders specifications: nb, nc, nd, nf, delay');
+        if length(maxOrders) ~= 4
+            error('bj model needs 4 orders specifications: nb, nc, nd, nf');
             return;           
         end
         idFunc = @bj;
@@ -87,7 +85,7 @@ function [finalModel] = identify(u, y, modelType, maxOrders, idOpt, outputOption
             for nc=1:maxOrders(3)
                 for nd=1:maxOrders(4)
                     orders =[na nb nc nd];
-                    idModel = idFunc(data, [orders(1:numOrders) nd], opt);
+                    idModel = idFunc(data, [orders(1:numOrders) nk], opt);
 
                     ysim = sim(idModel, u);
                     eps = y - ysim;
