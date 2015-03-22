@@ -16,35 +16,23 @@ function [finalModel] = identify(u, y, opt)
     end
  
     if strcmp(opt.modelType,'arx')
-        if length(opt.maxOrders) ~= 2
-            error('arx model needs 2 orders specifications: na, nb');
-        end
         opt.maxOrders(3:4) = [ 1 1 ];
         idFunc = @arx;
         idFuncOpt = arxOptions;
         numOrders = 2;
         
     elseif strcmp(opt.modelType, 'oe')
-        if length(opt.maxOrders) ~= 2
-            error('oe model needs 2 orders specifications: na, nb');
-        end
         opt.maxOrders(3:4) = [ 1 1 ];
         idFunc = @oe;
         idFuncOpt = oeOptions;
         numOrders = 2;
         
     elseif strcmp(opt.modelType, 'armax')
-        if length(opt.maxOrders) ~= 3
-            error('armax model needs 3 orders specifications: na, nb, nc');        
-        end
         opt.maxOrders(4) = 1;
         idFunc = @armax;
         idFuncOpt = armaxOptions;
         numOrders = 3;
     elseif strcmp(opt.modelType, 'bj')
-        if length(opt.maxOrders) ~= 4
-            error('bj model needs 4 orders specifications: nb, nc, nd, nf');
-        end
         idFunc = @bj;
         idFuncOpt = bjOptions;
         numOrders = 4;
@@ -67,13 +55,13 @@ function [finalModel] = identify(u, y, opt)
     J = inf; %variance of PE (eps)
     finalModel = 0;
     
-    for na=1:maxOrders(1)
-        for nb=1:maxOrders(2)
-            for nc=1:maxOrders(3)
-                for nd=1:maxOrders(4)
+    for na=1:opt.maxOrders(1)
+        for nb=1:opt.maxOrders(2)
+            for nc=1:opt.maxOrders(3)
+                for nd=1:opt.maxOrders(4)
                     for nk = minNk:maxNk
                         orders =[na nb nc nd];
-                        idModel = idFunc(data, [orders(1:numOrders) nk], opt);
+                        idModel = idFunc(data, [orders(1:numOrders) nk], idFuncOpt);
 
                         ysim = sim(idModel, u);
                         eps = y - ysim;
