@@ -52,7 +52,7 @@ function [finalModel] = identify(u, y, opt)
         minNk = opt.maxOrders(5);
         maxNk = minNk;
     else
-        minNk = 1;
+        minNk = 0;
         maxNk = opt.maxOrders(5);
     end
     
@@ -117,6 +117,9 @@ function [finalModel] = identify(u, y, opt)
 
                             finalModel = idModel;
                             J = Jtemp;
+                            if (J <= opt.minCost)
+                                return;
+                            end
                         end
                     end
                 end
