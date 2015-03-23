@@ -10,7 +10,17 @@ function []=compare(u,y,Model1,Model2)
 
     Model1.Name = getDenomination(Model1);
     Model2.Name = getDenomination(Model2);
-
+    
+    zsys1 = zpk(Model1);
+    zsys2 = zpk(Model2);
+    
+    figure;
+    
+    subplot(2,1,1);
+    zplane(cell2mat(zsys1.z),cell2mat(zsys1.p)); title(['Zero-poles diagram: ', Model1.Name ' - Gain: ' num2str(zsys1.k)]);
+    subplot(2,1,2);
+    zplane(cell2mat(zsys2.z),cell2mat(zsys2.p)); title(['Zero-poles diagram: ', Model2.Name ' - Gain: ' num2str(zsys2.k)]);
+    
     ysim1 = sim(Model1, u);
     ysim2 = sim(Model2,u);
     t = 1:1:size(y);
