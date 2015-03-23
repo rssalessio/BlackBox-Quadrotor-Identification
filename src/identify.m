@@ -56,8 +56,16 @@ function [finalModel] = identify(u, y, opt)
         maxNk = opt.maxOrders(5);
     end
     
+    if (opt.validate)
+        if (isa(opt.validationData, 'iddata')==0)
+            error('Invalid validation data');
+        end
+    end
+    
     if (strcmp(opt.cost, 'variance'))
         J = inf; %variance of PE (eps)
+    elseif (strcmp(opt.cost, 'max'))
+        J = inf;
     elseif strcmp(opt.cost, 'fpe')
         J = inf;
     elseif strcmp(opt.cost, 'aic')
@@ -77,18 +85,26 @@ function [finalModel] = identify(u, y, opt)
                     for nk = minNk:maxNk
                         orders =[na nb nc nd];
                         idModel = idFunc(data, [orders(1:numOrders) nk], idFuncOpt);
-
-                        if (strcmp(opt.cost, 'variance'))
-                            ysim = sim(idModel, u);
-                            eps = y - ysim;
-                            Jtemp = var(eps);
-                            [~,ratio,~] = isWhite(eps,0.1,0.1,'nooutput');
-                        elseif strcmp(opt.cost, 'fpe')
-                            Jtemp = fpe(idModel);
-                        elseif strcmp(opt.cost, 'aic')
-                            Jtemp = aic(idModel);
-                        elseif strcmp(opt.cost, 'fit')
-                            Jtemp = 100-idModel.Report.Fit.FitPercent;
+                        
+                        if(opt.validate)
+                            Jtemp = validate(idModel, opt.validationData, opt.cost);
+                        else
+                            if (strcmp(opt.cost, 'variance'))
+                                ysim = sim(idModel, u);
+                                eps = y - ysim;
+                                Jtemp = var(eps);
+                                [~,ratio,~] = isWhite(eps,0.1,0.1,'nooutput');
+                            elseif(strcmp(opt.cost, 'max'))
+                                ysim = sim(idModel, u);
+                                eps = y - ysim;
+                                Jtemp = max(abs(eps));
+                            elseif strcmp(opt.cost, 'fpe')
+                                Jtemp = fpe(idModel);
+                            elseif strcmp(opt.cost, 'aic')
+                                Jtemp = aic(idModel);
+                            elseif strcmp(opt.cost, 'fit')
+                                Jtemp = 100-idModel.Report.Fit.FitPercent;
+                            end
                         end
 
                         
