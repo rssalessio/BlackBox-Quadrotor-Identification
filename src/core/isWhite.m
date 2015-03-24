@@ -79,6 +79,11 @@ function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt, plotT
         title(['Anderson Test - ', plotTitle]);
         legend('Tolerance');
         
+        if result
+            text(10,sqrt(N)*rho(1),'WHITE');
+        else
+            text(10,sqrt(N)*rho(1),'NO WHITE');
+        end
         
         %Plot covariance
         subplot (2,1,2);

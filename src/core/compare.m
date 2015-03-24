@@ -8,11 +8,21 @@ function []=compare(u,y,Model1,Model2)
 %   Model1: u-to-y tf
 %   Model2: u-to-y tf
 
-    if(isa(Model1,'idpoly')==0 || isa(Model1,'idpoly')==0)
-        error('One of the model is not an idpoly object');
+    if isa(Model1,'ss')==1
+        Model1Name = 'SS';
+    elseif isa(Model1,'idpoly')==1
+        Model1Name = getDenomination(Model1);
+    else
+        error('Model1 must be either a ss model or idpoly');
     end
-    Model1.Name = getDenomination(Model1);
-    Model2.Name = getDenomination(Model2);
+    
+    if isa(Model2,'ss')==1
+        Model2Name = 'SS';
+    elseif isa(Model2,'idpoly')==1
+        Model2Name = getDenomination(Model2);
+    else
+        error('Model1 must be either a ss model or idpoly');
+    end
     
     zsys1 = zpk(Model1);
     zsys2 = zpk(Model2);
@@ -20,24 +30,24 @@ function []=compare(u,y,Model1,Model2)
     figure;
     
     subplot(2,1,1);
-    zplane(cell2mat(zsys1.z),cell2mat(zsys1.p)); title(['Zero-poles diagram: ', Model1.Name ' - Gain: ' num2str(zsys1.k)]);
+    zplane(cell2mat(zsys1.z),cell2mat(zsys1.p)); title(['Zero-poles diagram: ', Model1Name ' - Gain: ' num2str(zsys1.k)]);
     subplot(2,1,2);
-    zplane(cell2mat(zsys2.z),cell2mat(zsys2.p)); title(['Zero-poles diagram: ', Model2.Name ' - Gain: ' num2str(zsys2.k)]);
+    zplane(cell2mat(zsys2.z),cell2mat(zsys2.p)); title(['Zero-poles diagram: ', Model2Name ' - Gain: ' num2str(zsys2.k)]);
     
-    ysim1 = sim(Model1, u);
-    ysim2 = sim(Model2,u);
+    ysim1 = lsim(Model1, u);
+    ysim2 = lsim(Model2, u);
     t = 1:1:size(y);
     
     %Plot output comparisons
     figure; 
     subplot(3,1,1);
-    plot(t,y,t,ysim1); grid; legend('Data', Model1.Name); xlabel('Time'); ylabel('Output');title('Simulation Output Comparison');
+    plot(t,y,t,ysim1); grid; legend('Data', Model1Name); xlabel('Time'); ylabel('Output');title('Simulation Output Comparison');
     
     subplot(3,1,2);
-    plot(t,y,t,ysim2); grid; legend('Data',Model2.Name); xlabel('Time'); ylabel('Output');
+    plot(t,y,t,ysim2); grid; legend('Data',Model2Name); xlabel('Time'); ylabel('Output');
     
     subplot(3,1,3);
-    plot(t,y,t,ysim1,t,ysim2); grid; legend('Data', Model1.Name, Model2.Name); xlabel('Time'); ylabel('Output');    
+    plot(t,y,t,ysim1,t,ysim2); grid; legend('Data', Model1Name, Model2Name); xlabel('Time'); ylabel('Output');    
     
     %Compute absolute error
     yerr = [abs(y-ysim1)'; abs(y-ysim2)'; (ysim1-ysim2)'];
@@ -48,23 +58,28 @@ function []=compare(u,y,Model1,Model2)
     %Plot absolute error comparisons
     figure;
     subplot(4,1,1);
-    plot(t,yerr(1,:)); grid; xlabel('Time'); legend(['Data vs ' Model1.Name]); title('Absolute Error Comparison');
+    plot(t,yerr(1,:)); grid; xlabel('Time'); legend(['Data vs ' Model1Name]); title('Absolute Error Comparison');
+    [maxi,arg] = max(yerr(1,:)); text(arg,maxi,['MAX = ' num2str(maxi)]);
+    text(0,maxi,['Mean: ' num2str(yerr_mean(1)) ' - Var: ' num2str(yerr_var(1))]);
     
     subplot(4,1,2);
-    plot(t,yerr(2,:)); grid; xlabel('Time'); legend(['Data vs ' Model2.Name]);
+    plot(t,yerr(2,:)); grid; xlabel('Time'); legend(['Data vs ' Model2Name]);
+    [maxi,arg] = max(yerr(2,:)); text(arg,maxi,['MAX = ' num2str(maxi)]);
+    text(0,maxi,['Mean: ' num2str(yerr_mean(2)) ' - Var: ' num2str(yerr_var(2))]);
     
     subplot(4,1,3);
-    plot(t,yerr(1,:),t,yerr(2,:));grid; xlabel('Time'); legend(['Data vs ' Model1.Name ],[ 'Data vs ' Model2.Name]);
+    plot(t,yerr(1,:),t,yerr(2,:));grid; xlabel('Time'); legend(['Data vs ' Model1Name ],[ 'Data vs ' Model2Name]);
     
     subplot(4,1,4);
-    plot(t,yerr(3,:)); grid; xlabel('Time'); legend([Model1.Name ' vs ' Model2.Name]);
+    plot(t,yerr(3,:)); grid; xlabel('Time'); legend([Model1Name ' vs ' Model2Name]);
+    [maxi,arg] = max(yerr(3,:)); text(arg,maxi,['MAX = ' num2str(maxi)]);
+    text(0,maxi,['Mean: ' num2str(yerr_mean(3)) ' - Var: ' num2str(yerr_var(3))]);
     
+    disp(['[' Model1Name ' SIMULATION]  Mean absolute error: ' num2str(yerr_mean(1)) ' - Variance absolute error: ' num2str(yerr_var(1))]);
+    disp(['[' Model2Name ' SIMULATION]  Mean absolute error: ' num2str(yerr_mean(2)) ' - Variance absolute error: ' num2str(yerr_var(2))]);
+    disp(['[ERR ' Model1Name ' vs ' Model2Name ']     Mean absolute error: ' num2str(yerr_mean(3)) ' - Variance absolute error: ' num2str(yerr_var(3))]);
     
-    disp(['[' Model1.Name ' SIMULATION]  Mean absolute error: ' num2str(yerr_mean(1)) ' - Variance absolute error: ' num2str(yerr_var(1))]);
-    disp(['[' Model2.Name ' SIMULATION]  Mean absolute error: ' num2str(yerr_mean(2)) ' - Variance absolute error: ' num2str(yerr_var(2))]);
-    disp(['[ERR ' Model1.Name ' vs ' Model2.Name ']     Mean absolute error: ' num2str(yerr_mean(3)) ' - Variance absolute error: ' num2str(yerr_var(3))]);
-    
-    disp(['Area ' Model1.Name ': ' num2str(trapz(yerr(1,:))) ' - Area ' Model2.Name ': ' num2str(trapz(yerr(2,:)))]);
+    disp(['Area ' Model1Name ': ' num2str(trapz(yerr(1,:))) ' - Area ' Model2Name ': ' num2str(trapz(yerr(2,:)))]);
 
     N=floor(length(yerr_nomean)*0.1);
     coverr1 = covf(yerr_nomean(1,:)',N);
@@ -74,7 +89,8 @@ function []=compare(u,y,Model1,Model2)
     
     figure;   
     plot(t,coverr1,t,coverr2,t,coverr3); title('Covariance simulation');grid; xlabel('Step'); ylabel('Cov'); 
-    legend(Model1.Name, Model2.Name,'Diff covariance');
-    isWhite(coverr1',0.1,0.4,'plot', [Model1.Name ' Simulation error']);
-    isWhite(coverr2',0.1,0.4,'plot', [Model2.Name ' Simulation error']);
+    legend(Model1Name, Model2Name,'Diff covariance');
+    
+    isWhite(coverr1',0.1,0.4,'plot', [Model1Name ' Simulation error']);
+    isWhite(coverr2',0.1,0.4,'plot', [Model2Name ' Simulation error']);
 end
