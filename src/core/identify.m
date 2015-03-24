@@ -8,7 +8,8 @@ function [finalModel] = identify(u, y, opt)
 %OUTPUT:
 %   finalModel: model identified
 
-    data = iddata(y,u);
+    data = iddata(detrend(y),detrend(u));
+    
    
     switch(nargin)
         case 2
@@ -88,7 +89,10 @@ function [finalModel] = identify(u, y, opt)
     end
     
         finalModel = 0;
-
+        
+    totalComp = prod((opt.maxOrders-opt.minOrders +ones(size(opt.maxOrders))));
+    progress = 0;
+    reverseStr = '';
     for na=opt.minOrders(1):opt.maxOrders(1)
         for nb=opt.minOrders(2):opt.maxOrders(2)
             for nc=opt.minOrders(3):opt.maxOrders(3)
@@ -120,14 +124,14 @@ function [finalModel] = identify(u, y, opt)
                                 Jtemp = 100-idModel.Report.Fit.FitPercent;
                             end
                         end
-
                         
 
                         if (Jtemp < J)
-                            if opt.output
-                                disp(['New model with orders ' num2str([orders(1:numOrders) nk]) ' - J: ' num2str(Jtemp) ]);
+                            %if opt.output
+                              %  disp(['New model with orders ' num2str([orders(1:numOrders) nk]) ' - J: ' num2str(Jtemp) ]);
                                 %' isWhite ratio: ' num2str(ratio)
-                            end
+                            %end
+                            
 
                             finalModel = idModel;
                             J = Jtemp;
@@ -135,9 +139,16 @@ function [finalModel] = identify(u, y, opt)
                                 return;
                             end
                         end
+                        progress = progress+1;
+                        if(opt.output)
+                            msg = sprintf('Progress done: %3.1f - Best Cost Function value: %f', 100*progress/totalComp, J); %Don't forget this semicolon
+                            fprintf([reverseStr, msg]);
+                            reverseStr = repmat(sprintf('\b'), 1, length(msg));
+                        end
                     end
                 end
             end
         end
     end
+    fprintf('\n');
 end
