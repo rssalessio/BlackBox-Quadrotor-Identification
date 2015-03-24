@@ -8,6 +8,9 @@ function []=compare(u,y,Model1,Model2)
 %   Model1: u-to-y tf
 %   Model2: u-to-y tf
 
+    if(isa(Model1,'idpoly')==0 || isa(Model1,'idpoly')==0)
+        error('One of the model is not an idpoly object');
+    end
     Model1.Name = getDenomination(Model1);
     Model2.Name = getDenomination(Model2);
     

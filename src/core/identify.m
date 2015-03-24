@@ -18,21 +18,32 @@ function [finalModel] = identify(u, y, opt)
     if (isa(opt, 'identifyOptions')==0)
         error('Opt has to be an object of type identifyOptions');
     end
+    
+    if(sum(opt.minOrders > opt.maxOrders) > 0)
+        error('minOrders in identifyOptions should contains all values <= to those of maxOrders');
+    end
  
-    if strcmp(opt.modelType,'arx')
+    if (strcmp(opt.modelType,'arx') || strcmp(opt.modelType, 'iv4'))
         opt.maxOrders(3:4) = [ 1 1 ];
-        idFunc = @arx;
-        idFuncOpt = arxOptions;
+        opt.minOrders(3:4) = [ 1 1 ];
+        if(strcmp(opt.modelType,'arx'))
+            idFunc = @arx;
+            idFuncOpt = arxOptions;
+        else
+            idFunc = @iv4;
+            idFuncOpt = iv4Options;
+        end
         numOrders = 2;
-        
     elseif strcmp(opt.modelType, 'oe')
         opt.maxOrders(3:4) = [ 1 1 ];
+        opt.minOrders(3:4) = [ 1 1 ];
         idFunc = @oe;
         idFuncOpt = oeOptions;
         numOrders = 2;
         
     elseif strcmp(opt.modelType, 'armax')
         opt.maxOrders(4) = 1;
+        opt.minOrders(4) = 1;
         idFunc = @armax;
         idFuncOpt = armaxOptions;
         numOrders = 3;
@@ -52,7 +63,7 @@ function [finalModel] = identify(u, y, opt)
         minNk = opt.maxOrders(5);
         maxNk = minNk;
     else
-        minNk = 0;
+        minNk = opt.minOrders(5);
         maxNk = opt.maxOrders(5);
     end
     
@@ -78,14 +89,17 @@ function [finalModel] = identify(u, y, opt)
     
         finalModel = 0;
 
-    for na=1:opt.maxOrders(1)
-        for nb=1:opt.maxOrders(2)
-            for nc=1:opt.maxOrders(3)
-                for nd=1:opt.maxOrders(4)
+    for na=opt.minOrders(1):opt.maxOrders(1)
+        for nb=opt.minOrders(2):opt.maxOrders(2)
+            for nc=opt.minOrders(3):opt.maxOrders(3)
+                for nd=opt.minOrders(4):opt.maxOrders(4)
                     for nk = minNk:maxNk
                         orders =[na nb nc nd];
-                        idModel = idFunc(data, [orders(1:numOrders) nk], idFuncOpt);
-                        
+                        try
+                            idModel = idFunc(data, [orders(1:numOrders) nk], idFuncOpt);
+                        catch
+                            continue;
+                        end
                         if(opt.validate)
                             Jtemp = validate(idModel, opt.validationData, opt.cost);
                         else
