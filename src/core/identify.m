@@ -143,7 +143,7 @@ function [finalModel] = identify(u, y, opt)
                         timeSteps(progress) = t2(6)-t1(6);
                         tavg=mean(timeSteps(1:progress));
                         if(opt.output)
-                            msg = sprintf('Progress done: %3.1f (Time Left: %f) - Best Cost Function value: %f', 100*progress/totalComp, tavg*(totalComp-progress), J); %Don't forget this semicolon
+                            msg = sprintf('Progress done: %3.1f (Time Left: %f s) - Best Cost Function value: %f', 100*progress/totalComp,tavg*(totalComp-progress), J); %Don't forget this semicolon
                             fprintf([reverseStr, msg]);
                             reverseStr = repmat(sprintf('\b'), 1, length(msg));
                         end

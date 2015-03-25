@@ -58,22 +58,28 @@ function []=compare(u,y,Model1,Model2)
     %Plot absolute error comparisons
     figure;
     subplot(4,1,1);
-    plot(t,yerr(1,:)); grid; xlabel('Time'); legend(['Data vs ' Model1Name]); title('Absolute Error Comparison');
-    [maxi,arg] = max(yerr(1,:)); text(arg,maxi,['MAX = ' num2str(maxi)]);
-    text(0,maxi,['Mean: ' num2str(yerr_mean(1)) ' - Var: ' num2str(yerr_var(1))]);
+    plot(t,yerr(1,:)); axis([0, length(t), min(yerr(1,:)), max(yerr(1,:))+8]); grid; xlabel('Time'); legend(['Data vs ' Model1Name]); title('Absolute Error Comparison');hold on;
+    [maxi,arg] = max(yerr(1,:)); text(arg,maxi+3,['MAX = ' num2str(maxi)]);
+    text(0,maxi+5,['Mean: ' num2str(yerr_mean(1)) ' - Var: ' num2str(yerr_var(1))]);hold on;
+    plot(1:length(t),maxi*ones(length(t),1),'m-','linewidth',1); hold on;
+    plot(1:length(t),yerr_mean(1)*ones(length(t),1),'m-','linewidth',1); hold on;
     
     subplot(4,1,2);
-    plot(t,yerr(2,:)); grid; xlabel('Time'); legend(['Data vs ' Model2Name]);
-    [maxi,arg] = max(yerr(2,:)); text(arg,maxi,['MAX = ' num2str(maxi)]);
-    text(0,maxi,['Mean: ' num2str(yerr_mean(2)) ' - Var: ' num2str(yerr_var(2))]);
+    plot(t,yerr(2,:)); axis([0, length(t), min(yerr(2,:)), max(yerr(2,:))+8]);grid; xlabel('Time'); legend(['Data vs ' Model2Name]);hold on;
+    [maxi,arg] = max(yerr(2,:)); text(arg,maxi+3,['MAX = ' num2str(maxi)]);
+    text(0,maxi+5,['Mean: ' num2str(yerr_mean(2)) ' - Var: ' num2str(yerr_var(2))]);hold on;
+    plot(1:length(t),maxi*ones(length(t),1),'m-','linewidth',1); hold on;
+    plot(1:length(t),yerr_mean(2)*ones(length(t),1),'m-','linewidth',1); hold on;
     
     subplot(4,1,3);
     plot(t,yerr(1,:),t,yerr(2,:));grid; xlabel('Time'); legend(['Data vs ' Model1Name ],[ 'Data vs ' Model2Name]);
     
     subplot(4,1,4);
-    plot(t,yerr(3,:)); grid; xlabel('Time'); legend([Model1Name ' vs ' Model2Name]);
-    [maxi,arg] = max(yerr(3,:)); text(arg,maxi,['MAX = ' num2str(maxi)]);
-    text(0,maxi,['Mean: ' num2str(yerr_mean(3)) ' - Var: ' num2str(yerr_var(3))]);
+    plot(t,yerr(3,:));axis([0, length(t), min(yerr(3,:)), max(yerr(3,:))+8]); grid; xlabel('Time'); legend([Model1Name ' vs ' Model2Name]); hold on;
+    [maxi,arg] = max(yerr(3,:)); text(arg,maxi+3,['MAX = ' num2str(maxi)]);
+    text(0,maxi+5,['Mean: ' num2str(yerr_mean(3)) ' - Var: ' num2str(yerr_var(3))]); hold on;
+    plot(1:length(t),maxi*ones(length(t),1),'m-','linewidth',1); hold on;
+    plot(1:length(t),yerr_mean(3)*ones(length(t),1),'m-','linewidth',1); hold on;
     
     disp(['[' Model1Name ' SIMULATION]  Mean absolute error: ' num2str(yerr_mean(1)) ' - Variance absolute error: ' num2str(yerr_var(1))]);
     disp(['[' Model2Name ' SIMULATION]  Mean absolute error: ' num2str(yerr_mean(2)) ' - Variance absolute error: ' num2str(yerr_var(2))]);

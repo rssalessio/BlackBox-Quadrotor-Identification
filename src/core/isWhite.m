@@ -74,6 +74,7 @@ function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt, plotT
         plot(1:length(rho),beta*ones(length(rho),1),'r--','linewidth',1); hold on;
         plot(1:length(rho),-beta*ones(length(rho),1),'r--','linewidth',1); hold on;
         plot(1:length(rho),sqrt(N)*rho,'ko'); hold on;
+        grid;
         ylabel('sqrt(\rho)')
         xlabel('N');
         title(['Anderson Test - ', plotTitle]);
@@ -82,7 +83,7 @@ function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt, plotT
         if result
             text(10,sqrt(N)*rho(1),'WHITE');
         else
-            text(10,sqrt(N)*rho(1),'NO WHITE');
+            text(10,sqrt(N)*rho(1),'NOT WHITE');
         end
         
         %Plot covariance
