@@ -1,5 +1,5 @@
-function [J] = validate(idModel, data, costfunc)
-    ysim = sim(idModel, data.InputData);
+function [J] = validate(idModel, data, costfunc,opt)
+    ysim = sim(idModel, data.InputData,opt);
     eps = data.OutputData - ysim;
     if (strcmp(costfunc, 'variance'))%used to minimise variance
         J = var(eps); %

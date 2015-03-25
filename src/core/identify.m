@@ -90,7 +90,8 @@ function [finalModel] = identify(u, y, opt)
         error('Invalid cost objective, check identifyOptions');
     end
     
-        finalModel = 0;
+    simopt = simOptions('AddNoise',opt.addNoise);
+    finalModel = 0;
         
     totalComp = prod((opt.maxOrders-opt.minOrders +ones(size(opt.maxOrders))));
     timeSteps = zeros(totalComp,1);
@@ -112,15 +113,15 @@ function [finalModel] = identify(u, y, opt)
                             continue;
                         end
                         if(opt.validate)
-                            Jtemp = validate(idModel, opt.validationData, opt.cost);
+                            Jtemp = validate(idModel, opt.validationData, opt.cost,simopt);
                         else
                             if (strcmp(opt.cost, 'variance'))
-                                ysim = sim(idModel, u);
+                                ysim = sim(idModel, u,simopt);
                                 eps = y - ysim;
                                 Jtemp = var(eps);
                                 [~,ratio,~] = isWhite(eps,0.1,0.1,'nooutput');
                             elseif(strcmp(opt.cost, 'max'))
-                                ysim = sim(idModel, u);
+                                ysim = sim(idModel, u,simopt);
                                 eps = y - ysim;
                                 Jtemp = max(abs(eps));
                             elseif strcmp(opt.cost, 'fpe')

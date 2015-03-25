@@ -11,5 +11,6 @@ classdef identifyOptions
         validationData;             %iddata type, used for validation (validationData = iddata(y,u)
         cost = 'variance';          %select best model based either on : variance error (variance), aic (aic), fpe (fpe) or fit percentage (fit), max to reduce max abs error
         minCost = 10^(-5);              %if this cost is achieved, stop the algorithm
+        addNoise = false;
     end
 end

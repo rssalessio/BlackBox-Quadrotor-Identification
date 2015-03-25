@@ -1,4 +1,4 @@
-function []=compare(u,y,Model1,Model2)
+function []=compare(u,y,Model1,Model2,AddNoise)
 % compare(u,y, model1, model2) performs a simulation comparison between
 % the 1st model and the 2nd model, based on input and output data (u,y)
 %
@@ -12,9 +12,10 @@ function []=compare(u,y,Model1,Model2)
    
     plotZeroPoles(Model1,Model1Name,Model2,Model2Name);
     
+    opt = simOptions('AddNoise',AddNoise);
     
-    ysim1 = lsim(Model1, u);
-    ysim2 = lsim(Model2, u);
+    ysim1 = sim(Model1, u,opt);
+    ysim2 = sim(Model2, u,opt);
     t = 1:1:size(y);
     
     plotOutput(t,y,ysim1,ysim2,Model1Name,Model2Name)

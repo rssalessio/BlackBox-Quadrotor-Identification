@@ -2,27 +2,31 @@ clear all, clc, close all;
 
 [in,out,modelSS] = loaddata();
 
+
+
 opt = identifyOptions;
 opt.target = 'simulation';
 opt.inputDelayAuto = false;
 opt.cost ='fit';
 opt.modelType = 'oe';
-opt.maxOrders = [ 1 1 1 1 3 ];
+opt.maxOrders = [ 3 3 3 3 3 ];
 %opt.maxOrders = [ 5 7 5 5 2 ];
 opt.validate = 1;
 opt.validationData = iddata(out.prbs2,in.prbs2);
+opt.addNoise = 1;
 
 disp('OE model');
-modelOE = identify(in.u1,out.y1,opt);
+modelOE = identify(in.u2,out.y2,opt);
 
 opt.modelType ='armax';
 disp('armax model');
-modelARX = identify(in.u1,out.y1,opt);
+modelARX = identify(in.u2,out.y2,opt);
 
 modelOE, modelARX
 
 disp('OE vs ARMAX');
-compare(in.u1,out.y1,modelARX,modelOE);
+
+compare(in.u1,out.y1,modelARX,modelOE,true);
     % 
 % disp('SS vs ARMAX');
 % compare(in.u1,out.y1,modelARX,modelSS);
