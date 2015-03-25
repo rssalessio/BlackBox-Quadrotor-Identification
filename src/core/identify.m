@@ -91,6 +91,7 @@ function [finalModel] = identify(u, y, opt)
         finalModel = 0;
         
     totalComp = prod((opt.maxOrders-opt.minOrders +ones(size(opt.maxOrders))));
+    timeSteps = zeros(totalComp,1);
     progress = 0;
     reverseStr = '';
     for na=opt.minOrders(1):opt.maxOrders(1)
@@ -99,9 +100,13 @@ function [finalModel] = identify(u, y, opt)
                 for nd=opt.minOrders(4):opt.maxOrders(4)
                     for nk = minNk:maxNk
                         orders =[na nb nc nd];
+                        t1=clock();
                         try
                             idModel = idFunc(data, [orders(1:numOrders) nk], idFuncOpt);
                         catch
+                            progress = progress+1;
+                            t2=clock();
+                            timeSteps(progress) = t2(6)-t1(6);
                             continue;
                         end
                         if(opt.validate)
@@ -127,12 +132,6 @@ function [finalModel] = identify(u, y, opt)
                         
 
                         if (Jtemp < J)
-                            %if opt.output
-                              %  disp(['New model with orders ' num2str([orders(1:numOrders) nk]) ' - J: ' num2str(Jtemp) ]);
-                                %' isWhite ratio: ' num2str(ratio)
-                            %end
-                            
-
                             finalModel = idModel;
                             J = Jtemp;
                             if (J <= opt.minCost)
@@ -140,8 +139,11 @@ function [finalModel] = identify(u, y, opt)
                             end
                         end
                         progress = progress+1;
+                        t2=clock();
+                        timeSteps(progress) = t2(6)-t1(6);
+                        tavg=mean(timeSteps(1:progress));
                         if(opt.output)
-                            msg = sprintf('Progress done: %3.1f - Best Cost Function value: %f', 100*progress/totalComp, J); %Don't forget this semicolon
+                            msg = sprintf('Progress done: %3.1f (Time Left: %f) - Best Cost Function value: %f', 100*progress/totalComp, tavg*(totalComp-progress), J); %Don't forget this semicolon
                             fprintf([reverseStr, msg]);
                             reverseStr = repmat(sprintf('\b'), 1, length(msg));
                         end
