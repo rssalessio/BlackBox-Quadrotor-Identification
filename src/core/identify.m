@@ -80,8 +80,10 @@ function [finalModel] = identify(u, y, opt)
         J = inf;
     elseif strcmp(opt.cost, 'fpe')
         J = inf;
+        opt.validate = 0;
     elseif strcmp(opt.cost, 'aic')
         J = inf;
+        opt.validate = 0;
     elseif strcmp(opt.cost, 'fit')
         J = 100;
     else
