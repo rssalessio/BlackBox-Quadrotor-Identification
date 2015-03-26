@@ -65,13 +65,19 @@ function []=plotOutput(t,y,ysim1,ysim2,Model1Name,Model2Name)
 %Plot output comparisons
     figure; 
     subplot(3,1,1);
-    plot(t,y,t,ysim1); grid; legend('Data', Model1Name); xlabel('Time'); ylabel('Output');title('Simulation Output Comparison');
+    plot(t,y,t,ysim1); grid; legend('Data', Model1Name); xlabel('Time'); ylabel('Output');title('Simulation Output Comparison');hold on;
+    J=fit(y,ysim1);
+    text(0,max(y),['Fit: ' num2str(J) ' %']);hold on;
     
     subplot(3,1,2);
     plot(t,y,t,ysim2); grid; legend('Data',Model2Name); xlabel('Time'); ylabel('Output');
+    J=fit(y,ysim2);
+    text(0,max(y),['Fit: ' num2str(J) ' %']);hold on;
     
     subplot(3,1,3);
-    plot(t,y,t,ysim1,t,ysim2); grid; legend('Data', Model1Name, Model2Name); xlabel('Time'); ylabel('Output');    
+    plot(t,y,t,ysim1,t,ysim2); grid; legend('Data', Model1Name, Model2Name); xlabel('Time'); ylabel('Output');   
+    J=fit(ysim1,ysim2);
+    text(0,max(y),['Fit: ' num2str(J) ' %']);hold on;
     
 end
 
