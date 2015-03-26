@@ -13,7 +13,7 @@ opt.maxOrders = [ 3 3 3 3 3 ];
 %opt.maxOrders = [ 5 7 5 5 2 ];
 opt.validate = 1;
 opt.validationData = iddata(out.prbs2,in.prbs2);
-opt.addNoise = 1;
+opt.addNoise = 0;
 
 disp('OE model');
 modelOE = identify(in.u2,out.y2,opt);
@@ -25,8 +25,9 @@ modelARX = identify(in.u2,out.y2,opt);
 modelOE, modelARX
 
 disp('OE vs ARMAX');
-
-compare(in.u1,out.y1,modelARX,modelOE,true);
+%%
+close all
+compare(in.u1,out.y1,modelARX,modelOE,false);
     % 
 % disp('SS vs ARMAX');
 % compare(in.u1,out.y1,modelARX,modelSS);

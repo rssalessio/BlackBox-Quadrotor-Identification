@@ -18,7 +18,8 @@ function []=compare(u,y,Model1,Model2,AddNoise)
     ysim2 = sim(Model2, u,opt);
     t = 1:1:size(y);
     
-    plotOutput(t,y,ysim1,ysim2,Model1Name,Model2Name)
+    plotOutput(t,y,ysim1,ysim2,Model1Name,Model2Name);
+    plotPower(y,ysim1,ysim2,u);
     
     %Compute absolute error
     yerr = [abs(y-ysim1)'; abs(y-ysim2)'; (ysim1-ysim2)'];
@@ -65,20 +66,30 @@ function []=plotOutput(t,y,ysim1,ysim2,Model1Name,Model2Name)
 %Plot output comparisons
     figure; 
     subplot(3,1,1);
-    plot(t,y,t,ysim1); grid; legend('Data', Model1Name); xlabel('Time'); ylabel('Output');title('Simulation Output Comparison');hold on;
+    plot(t,y,t,ysim1); axis([0, length(t), min([y;ysim1]), max([y;ysim1])+8]);grid; legend('Data', Model1Name); xlabel('Time'); ylabel('Output');title('Simulation Output Comparison');hold on;
     J=fit(y,ysim1);
     text(0,max(y),['Fit: ' num2str(J) ' %']);hold on;
     
     subplot(3,1,2);
-    plot(t,y,t,ysim2); grid; legend('Data',Model2Name); xlabel('Time'); ylabel('Output');
+    plot(t,y,t,ysim2); axis([0, length(t), min([y;ysim2]), max([y;ysim2])+8]);grid; legend('Data',Model2Name); xlabel('Time'); ylabel('Output');
     J=fit(y,ysim2);
     text(0,max(y),['Fit: ' num2str(J) ' %']);hold on;
     
     subplot(3,1,3);
-    plot(t,y,t,ysim1,t,ysim2); grid; legend('Data', Model1Name, Model2Name); xlabel('Time'); ylabel('Output');   
-    J=fit(ysim1,ysim2);
-    text(0,max(y),['Fit: ' num2str(J) ' %']);hold on;
+    plot(t,y,t,ysim1,t,ysim2);axis([0, length(t), min([ysim2;ysim1]), max([ysim2;ysim1])+8]);grid; legend('Data', Model1Name, Model2Name); xlabel('Time'); ylabel('Output');   
     
+end
+
+function []=plotPower(y,ysim1,ysim2,u)
+    figure;
+    subplot(4,1,1);
+    periodogram(y);
+    subplot(4,1,2);
+    periodogram(ysim1);
+    subplot(4,1,3);
+    periodogram(ysim2);
+    subplot(4,1,4);
+    periodogram(u);
 end
 
 function []=plotError(t,yerr,yerr_mean,yerr_var,Model1Name,Model2Name)
@@ -87,24 +98,24 @@ function []=plotError(t,yerr,yerr_mean,yerr_var,Model1Name,Model2Name)
     subplot(4,1,1);
     plot(t,yerr(1,:)); axis([0, length(t), min(yerr(1,:)), max(yerr(1,:))+8]); grid; xlabel('Time'); legend(['Data vs ' Model1Name]); title('Absolute Error Comparison');hold on;
     [maxi,arg] = max(yerr(1,:)); text(arg,maxi+3,['MAX = ' num2str(maxi)]);
-    text(0,maxi+5,['Mean: ' num2str(yerr_mean(1)) ' - Var: ' num2str(yerr_var(1))]);hold on;
+    text(0,maxi+3,['Mean: ' num2str(yerr_mean(1)) ' - Var: ' num2str(yerr_var(1))]);hold on;
     plot(1:length(t),maxi*ones(length(t),1),'m-','linewidth',1); hold on;
     plot(1:length(t),yerr_mean(1)*ones(length(t),1),'m-','linewidth',1); hold on;
     
     subplot(4,1,2);
     plot(t,yerr(2,:)); axis([0, length(t), min(yerr(2,:)), max(yerr(2,:))+8]);grid; xlabel('Time'); legend(['Data vs ' Model2Name]);hold on;
     [maxi,arg] = max(yerr(2,:)); text(arg,maxi+3,['MAX = ' num2str(maxi)]);
-    text(0,maxi+5,['Mean: ' num2str(yerr_mean(2)) ' - Var: ' num2str(yerr_var(2))]);hold on;
+    text(0,maxi+3,['Mean: ' num2str(yerr_mean(2)) ' - Var: ' num2str(yerr_var(2))]);hold on;
     plot(1:length(t),maxi*ones(length(t),1),'m-','linewidth',1); hold on;
     plot(1:length(t),yerr_mean(2)*ones(length(t),1),'m-','linewidth',1); hold on;
     
     subplot(4,1,3);
-    plot(t,yerr(1,:),t,yerr(2,:));grid; xlabel('Time'); legend(['Data vs ' Model1Name ],[ 'Data vs ' Model2Name]);
+    plot(t,yerr(1,:),t,yerr(2,:));axis([0, length(t), min([yerr(1,:),yerr(2,:)]), max([yerr(2,:),yerr(1,:)])+8]);  grid; xlabel('Time'); legend(['Data vs ' Model1Name ],[ 'Data vs ' Model2Name]);
     
     subplot(4,1,4);
     plot(t,yerr(3,:));axis([0, length(t), min(yerr(3,:)), max(yerr(3,:))+8]); grid; xlabel('Time'); legend([Model1Name ' vs ' Model2Name]); hold on;
     [maxi,arg] = max(yerr(3,:)); text(arg,maxi+3,['MAX = ' num2str(maxi)]);
-    text(0,maxi+5,['Mean: ' num2str(yerr_mean(3)) ' - Var: ' num2str(yerr_var(3))]); hold on;
+    text(0,maxi+3,['Mean: ' num2str(yerr_mean(3)) ' - Var: ' num2str(yerr_var(3))]); hold on;
     plot(1:length(t),maxi*ones(length(t),1),'m-','linewidth',1); hold on;
     plot(1:length(t),yerr_mean(3)*ones(length(t),1),'m-','linewidth',1); hold on;
     
