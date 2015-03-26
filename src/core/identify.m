@@ -1,4 +1,4 @@
-function [finalModel] = identify(u, y, opt)
+function [finalModel,save] = identify(u, y, opt)
 % identification(u,y,opt) identifies a polynomial model based on data
 % (u,y)
 %INPUT:
@@ -7,8 +7,12 @@ function [finalModel] = identify(u, y, opt)
 %   opt: object of type identifyOptions, used to set options.
 %OUTPUT:
 %   finalModel: model identified
+%   savedData: structure with the identification results
 
     data = iddata(detrend(y),detrend(u));
+    
+    save.data = data;
+    save.opt  = opt;
     
    
     switch(nargin)
@@ -155,5 +159,6 @@ function [finalModel] = identify(u, y, opt)
             end
         end
     end
+    save.model = FinalModel;
     fprintf('\n');
 end

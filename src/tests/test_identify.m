@@ -27,7 +27,7 @@ modelOE, modelARX
 disp('OE vs ARMAX');
 %%
 close all
-compare(in.u1,out.y1,modelARX,modelOE,false);
+compare(in.u1,out.y1,modelARX,modelOE,0);
     % 
 % disp('SS vs ARMAX');
 % compare(in.u1,out.y1,modelARX,modelSS);

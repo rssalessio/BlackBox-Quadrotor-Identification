@@ -1,4 +1,4 @@
-function []=compare(u,y,Model1,Model2,AddNoise)
+function [save]=compare(u,y,Model1,Model2,AddNoise)
 % compare(u,y, model1, model2) performs a simulation comparison between
 % the 1st model and the 2nd model, based on input and output data (u,y)
 %
@@ -7,15 +7,25 @@ function []=compare(u,y,Model1,Model2,AddNoise)
 %   y: output 
 %   Model1: u-to-y tf
 %   Model2: u-to-y tf
-
+%   AddNoise: noise also taken into consideration
+%OUTPUT:
+%   save: structure with all the comparison data
+    save.Model1 = Model1;
+    save.Model2 = Model2;
+    save.Data = iddata(y,u);
+    save.Noise = AddNoise;
+    
     [Model1Name,Model2Name]=modelCheck(Model1,Model2);
-   
+    save.Model1Name = Model1Name;
+    save.Model2Name = Model2Name;
     plotZeroPoles(Model1,Model1Name,Model2,Model2Name);
     
     opt = simOptions('AddNoise',AddNoise);
     
     ysim1 = sim(Model1, u,opt);
     ysim2 = sim(Model2, u,opt);
+    save.ysim1 = ysim1;
+    save.ysim2 = ysim2;
     t = 1:1:size(y);
     
     plotOutput(t,y,ysim1,ysim2,Model1Name,Model2Name);
@@ -26,7 +36,7 @@ function []=compare(u,y,Model1,Model2,AddNoise)
     yerr_mean = [mean(yerr(1,:)); mean(yerr(2,:));mean(yerr(3,:))];
     yerr_var = [var(yerr(1,:)); var(yerr(2,:));var(yerr(3,:))];
     yerr_nomean = yerr-yerr_mean*ones(1,size(yerr,2));
-    
+    save.yerr = yerr;
     plotError(t,yerr,yerr_mean,yerr_var,Model1Name,Model2Name);
     
     whiteCheck(t,yerr_nomean,Model1Name,Model2Name);
