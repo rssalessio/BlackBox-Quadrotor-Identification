@@ -159,6 +159,6 @@ function [finalModel,save] = identify(u, y, opt)
             end
         end
     end
-    save.model = FinalModel;
+    save.model = finalModel;
     fprintf('\n');
 end

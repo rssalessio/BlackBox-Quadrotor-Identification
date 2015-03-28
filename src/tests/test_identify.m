@@ -2,21 +2,6 @@ clear all, clc, close all;
 
 [in,out,modelSS] = loaddata();
 
-R1 = covarianceMatrix(
-phi1 = [out.prbs1; in.prbs1];
-R1 = phi1*phi1';
-Ru1 = in.prbs1*in.prbs1';
-
-
-phi2 = [out.y2;in.u2];
-R2 = phi2*phi2';
-Ru2 = in.u2*in.u2';
-
-
-phi3 = [out.y3;in.u3];
-R3 = phi3*phi3';
-Ru3 = in.u3*in.u3';
-
 opt = identifyOptions;
 opt.target = 'simulation';
 opt.inputDelayAuto = false;
