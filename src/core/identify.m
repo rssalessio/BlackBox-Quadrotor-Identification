@@ -124,7 +124,7 @@ function [finalModel,save] = identify(u, y, opt)
                                 ysim = sim(idModel, u,simopt);
                                 eps = y - ysim;
                                 Jtemp = var(eps);
-                                [~,ratio,~] = isWhite(eps,0.1,0.1,'nooutput');
+                                [~,ratio,~] = inspectSignal.isWhite(eps,0.1,0.1,'nooutput');
                             elseif(strcmp(opt.cost, 'max'))
                                 ysim = sim(idModel, u,simopt);
                                 eps = y - ysim;

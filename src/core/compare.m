@@ -147,6 +147,6 @@ function []=whiteCheck(t,yerr_nomean,Model1Name,Model2Name)
     plot(t,coverr1,t,coverr2,t,coverr3); title('Covariance simulation');grid; xlabel('Step'); ylabel('Cov'); 
     legend(Model1Name, Model2Name,'Diff covariance');
     
-    isWhite(coverr1',0.1,0.4,'plot', [Model1Name ' Simulation error']);
-    isWhite(coverr2',0.1,0.4,'plot', [Model2Name ' Simulation error']);
+    inspectSignal.isWhite(coverr1',0.1,0.4,'plot', [Model1Name ' Simulation error']);
+    inspectSignal.isWhite(coverr2',0.1,0.4,'plot', [Model2Name ' Simulation error']);
 end
