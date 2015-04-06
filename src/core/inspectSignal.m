@@ -3,25 +3,80 @@ classdef inspectSignal
     end
     methods(Static)
         function [] = inspectX(x,Ts)
+           % Some tests to understand:
+           % Ts = 0.2; => Fs=5 => nyquist 2.5Hz
+           % t=0:Ts:10; x= sin(2*pi*2*t)+sin(2*pi*1*t)+sin(2*pi*5*t);
+           %inspectSignal.inspectX(x,Ts); 
+           % signal at 1 hz is visible, at 2hz is shifted because near
+           % nyquist freq, 5hz not visible
            xt = x - mean(x);
-           [Cxx,lags]=xcov(xt,50,'biased'); 
+           [Cxx,lags]=xcov(xt,length(x),'biased'); 
            tau=lags; 
            
            t=0:Ts:length(xt)*Ts-Ts;
-           figure; subplot(211); plot(t,xt); grid; xlabel('Time [s]'); ylabel('x(t)');
-           subplot(212); plot(tau,Cxx); grid; xlabel('\tau'); ylabel('C_{xx}(\tau)');
+           figure; subplot(411); plot(t,xt); grid; xlabel('Time [s]'); ylabel('x(t)'); title('Plot');
+           subplot(412); plot(tau,Cxx); grid; xlabel('\tau'); ylabel('C_{xx}(\tau)'); title('Covariance');
+                         
+           Fs=1/Ts;
+           N= length(xt);
+           f = Fs/2*linspace(0,1,N/2);
+           X = fft(xt);
+           X =abs(X(1:N/2));
+           X(1) =X(1)/N;
+           X(2:end) = X(2:end)*2/N;
+           subplot 413
+           plot(f,X);
+           grid on
+           title('Spectrum')
+           xlabel('Frequency (Hz)')
+           ylabel('FFT')
+           
+           
+           
+           Cxx = Cxx(tau >= 0);
+           f = Fs/2*linspace(0,1,N/2+1);
+           N= length(Cxx);
+           X = fft(Cxx);
+           X =abs(X(1:N/2));
+           X(1) =X(1)/N;
+           X(2:end) = X(2:end)*2/N;
+           subplot 414
+           plot(f,X);
+           grid on
+           title('Power Spectrum')
+           xlabel('Frequency (Hz)')
+           ylabel('Power/Frequency (W/Hz)')
+           
         end
         
         function [] = inspectXY(x,y,Ts)
            xt = x - mean(x);
            yt = y -  mean(y);
-           [Cxy,lags]=xcov(xt,yt,50,'biased'); 
+           [Cxy,lags]=xcov(xt,yt,length(xt),'biased'); 
            tau=lags; 
            
            t=0:Ts:length(xt)*Ts-Ts;
-           figure; subplot(311); plot(t,yt); grid; xlabel('Time [s]'); ylabel('y(t)');
-           subplot(312); plot(t,xt); grid; xlabel('Time [s]'); ylabel('x(t)');
-           subplot(313); plot(tau,Cxy); grid; xlabel('\tau [s]'); ylabel('C_{xy}(\tau)');
+           figure; subplot(411); plot(t,yt); grid; xlabel('Time [s]'); ylabel('y(t)'); 
+           subplot(412); plot(t,xt); grid; xlabel('Time [s]'); ylabel('x(t)'); 
+           subplot(413); plot(tau,Cxy); grid; xlabel('\tau [s]'); ylabel('C_{xy}(\tau)'); title('Cross-Covariance');
+           
+           Fs=1/Ts;
+           Cxy = Cxy(tau >= 0);
+           
+           N= length(Cxy)
+           f = Fs/2*linspace(0,1,N/2);
+           X = fft(Cxy);
+           X =abs(X(1:N/2));
+           X(1) =X(1)/N;
+           X(2:end) = X(2:end)*2/N;
+           subplot 414
+           length(f)
+           length(X)
+           plot(f,X);
+           grid on
+           title('Spectrum')
+           xlabel('Frequency (Hz)')
+           ylabel('Power/Frequency (W/Hz)')
         end
         
         function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt, plotTitle)
