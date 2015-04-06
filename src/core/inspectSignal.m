@@ -34,7 +34,7 @@ classdef inspectSignal
            
            
            Cxx = Cxx(tau >= 0);
-           f = Fs/2*linspace(0,1,N/2+1);
+           f = Fs/2*linspace(0,1,N/2+1*mod(length(xt),2));
            N= length(Cxx);
            X = fft(Cxx);
            X =abs(X(1:N/2));

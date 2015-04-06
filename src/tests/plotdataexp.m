@@ -42,6 +42,26 @@ subplot(212);
 plot([zeros(length(i.exp3.u1)+length(i.exp3.u2),1); i.exp3.u3]); hold on;
 plot([zeros(length(i.exp3.u1),1) ;i.exp3.u2]); hold on;
 plot(i.exp3.u1); hold on;grid; xlabel('Time [s]'); ylabel('u(t)');
+%%
+close all
+
+inspectSignal.inspectX(i.exp1.u1,0.2);
+
+inspectSignal.inspectX(i.exp2.u1,0.2);
+
+inspectSignal.inspectX(i.exp3.u1,0.2);
+
+inspectSignal.inspectX(i.exp1.u2,0.2);
+
+inspectSignal.inspectX(i.exp2.u2,0.2);
+
+inspectSignal.inspectX(i.exp3.u2,0.2);
 
 
-inspectSignal.inspectX(i.
+inspectSignal.inspectX(i.exp1.u3,0.2);
+
+inspectSignal.inspectX(i.exp2.u3,0.2);
+
+inspectSignal.inspectX(i.exp3.u3,0.2);
+
+

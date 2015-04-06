@@ -7,18 +7,17 @@ opt.target = 'simulation';
 opt.inputDelayAuto = false;
 opt.cost ='fit';
 opt.modelType = 'oe';
-opt.maxOrders = [ 3 3 3 3 3 ];
-%opt.maxOrders = [ 5 7 5 5 2 ];
-opt.validate = 1;
-opt.validationData = iddata(out.prbs2,in.prbs2);
+opt.maxOrders = [ 5 5 5 5 3 ];
+opt.validate = 0;
+opt.validationData = iddata(out.exp2.y2,in.exp2.u2);
 opt.addNoise = 0;
 
 disp('OE model');
-modelOE = identify(in.u2,out.y2,opt);
+modelOE = identify(in.exp1.u1,out.exp1.y1,opt);
 
 opt.modelType ='armax';
 disp('armax model');
-modelARX = identify(in.u2,out.y2,opt);
+modelARX = identify(in.exp1.u1,out.exp1.y1,opt);
 
 modelOE, modelARX
 
