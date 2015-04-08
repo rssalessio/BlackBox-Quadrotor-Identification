@@ -25,6 +25,6 @@ function [g] = craAnalysis(y,u)
     g = Cyu/lambda;
     
     figure;
-    plot(0:1:19,g(1:20)); grid; hold on;
-    gmat=cra(iddata(y,u));
+    plot(0:1:19,g(1:2h0)); grid; hold on;
+    gmat=cra(iddata(y,u)); legend('CraAnalysis (AR30)','Matlab CRA (AR10)');
 end
