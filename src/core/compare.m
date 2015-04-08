@@ -1,4 +1,4 @@
-function [save]=compare(u,y,Model1,Model2,AddNoise)
+function [save]=compare(data,Model1,Model2,AddNoise)
 % compare(u,y, model1, model2) performs a simulation comparison between
 % the 1st model and the 2nd model, based on input and output data (u,y)
 %
@@ -12,7 +12,8 @@ function [save]=compare(u,y,Model1,Model2,AddNoise)
 %   save: structure with all the comparison data
     save.Model1 = Model1;
     save.Model2 = Model2;
-    save.Data = iddata(y,u);
+    data = detrend(data);
+    save.Data = data;
     save.Noise = AddNoise;
     
     [Model1Name,Model2Name]=modelCheck(Model1,Model2);
@@ -22,17 +23,17 @@ function [save]=compare(u,y,Model1,Model2,AddNoise)
     
     opt = simOptions('AddNoise',AddNoise);
     
-    ysim1 = sim(Model1, u,opt);
-    ysim2 = sim(Model2, u,opt);
+    ysim1 = sim(Model1, data.InputData,opt);
+    ysim2 = sim(Model2, data.InputData,opt);
     save.ysim1 = ysim1;
     save.ysim2 = ysim2;
-    t = 1:1:size(y);
+    t = 1:1:size(data.OutputData);
     
-    plotOutput(t,y,ysim1,ysim2,Model1Name,Model2Name);
-    plotPower(y,ysim1,ysim2,u);
+    plotOutput(t,data.OutputData,ysim1,ysim2,Model1Name,Model2Name);
+    plotPower(data.OutputData,ysim1,ysim2,data.InputData);
     
     %Compute absolute error
-    yerr = [abs(y-ysim1)'; abs(y-ysim2)'; (ysim1-ysim2)'];
+    yerr = [abs(data.OutputData-ysim1)'; abs(data.OutputData-ysim2)'; (ysim1-ysim2)'];
     yerr_mean = [mean(yerr(1,:)); mean(yerr(2,:));mean(yerr(3,:))];
     yerr_var = [var(yerr(1,:)); var(yerr(2,:));var(yerr(3,:))];
     yerr_nomean = yerr-yerr_mean*ones(1,size(yerr,2));

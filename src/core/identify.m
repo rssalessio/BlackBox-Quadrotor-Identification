@@ -1,22 +1,21 @@
-function [finalModel,save] = identify(u, y, opt)
-% identification(u,y,opt) identifies a polynomial model based on data
+function [finalModel,save] = identify(data, opt)
+% identification(data,opt) identifies a polynomial model based on data
 % (u,y)
 %INPUT:
-%   u: measured input data
-%   y: measured output data
+%   data: measured data (iddata object)
 %   opt: object of type identifyOptions, used to set options.
 %OUTPUT:
 %   finalModel: model identified
 %   savedData: structure with the identification results
 
-    data = iddata(detrend(y),detrend(u));
+    data = detrend(data);
     
     save.data = data;
     save.opt  = opt;
     
    
     switch(nargin)
-        case 2
+        case 1
             opt = identifyOptions;
     end
     
@@ -121,13 +120,13 @@ function [finalModel,save] = identify(u, y, opt)
                             Jtemp = validate(idModel, opt.validationData, opt.cost,simopt);
                         else
                             if (strcmp(opt.cost, 'variance'))
-                                ysim = sim(idModel, u,simopt);
-                                eps = y - ysim;
+                                ysim = sim(idModel, data.InputData ,simopt);
+                                eps = data.OutputData - ysim;
                                 Jtemp = var(eps);
                                 [~,ratio,~] = inspectSignal.isWhite(eps,0.1,0.1,'nooutput');
                             elseif(strcmp(opt.cost, 'max'))
-                                ysim = sim(idModel, u,simopt);
-                                eps = y - ysim;
+                                ysim = sim(idModel, data.InputData,simopt);
+                                eps = data.OutputData - ysim;
                                 Jtemp = max(abs(eps));
                             elseif strcmp(opt.cost, 'fpe')
                                 Jtemp = fpe(idModel);
