@@ -16,11 +16,11 @@ classdef inspectSignal
            t=0:Ts:length(xt)*Ts-Ts;
            figure; subplot(311); plot(t,xt); grid; xlabel('Time [s]'); ylabel('x(t)'); title('Plot');
            subplot(312); plot(tau,Cxx); grid; xlabel('\tau'); ylabel('C_{xx}(\tau)'); title('Covariance');
-           
+           axis([0, length(Cxx)/2, min(Cxx), max(Cxx)]);
       
            
            subplot 313
-           h=spectrumplot(etfe(iddata([],xt,Ts)),spa(iddata([],xt,Ts)));
+           h=spectrumplot(etfe(iddata([],xt,Ts)),spa(iddata([],xt,Ts)));grid;
            legend({'Smoothed periodogram','Blackman-Tukey estimate'});
         end
         

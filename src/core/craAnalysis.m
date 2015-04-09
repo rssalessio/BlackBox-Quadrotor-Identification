@@ -9,8 +9,8 @@ function [g] = craAnalysis(data)
 % to y, then do everything
     data = detrend(data);
     
-    m = ar(data.InputData, 30, 'ls');% i find A(z)u(t)=e(t)
-    L=tf(m.A, 1,-1,'variable','z^-1');% L(z)=A(z)
+    m = ar(data.InputData, 30,'ls');% i find A(z)u(t)=e(t)
+    L=tf(m.A, 1,data.Ts,'variable','z^-1');% L(z)=A(z)
     
     y = lsim(L,data.OutputData); 
     u = lsim(L,data.InputData);%new u = e(t)
@@ -26,4 +26,6 @@ function [g] = craAnalysis(data)
     figure;
     plot(0:1:19,g(1:20)); grid; hold on;
     gmat=cra(data); legend('CraAnalysis (AR30)','Matlab CRA (AR10)');
+    
+
 end

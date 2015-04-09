@@ -5,7 +5,7 @@ clear all, clc, close all;
 opt = identifyOptions;
 opt.target = 'prediction';
 opt.inputDelayAuto = false;
-opt.cost ='mfit';
+opt.cost ='variance';
 opt.modelType = 'oe';
 opt.maxOrders = [ 5 5 5 5 3 ];
 opt.validate = 1;
