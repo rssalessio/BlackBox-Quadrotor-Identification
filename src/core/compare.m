@@ -93,15 +93,10 @@ function []=plotOutput(t,y,ysim1,ysim2,Model1Name,Model2Name)
 end
 
 function []=plotPower(y,ysim1,ysim2,u)
-    figure;
-    subplot(4,1,1);
-    periodogram(y);
-    subplot(4,1,2);
-    periodogram(ysim1);
-    subplot(4,1,3);
-    periodogram(ysim2);
-    subplot(4,1,4);
-    periodogram(u);
+    inspectSignal.inspect(y,0.2);
+    inspectSignal.inspect(ysim1,0.2);
+    inspectSignal.inspect(ysim2,0.2);
+    inspectSignal.inspect(u,0.3);
 end
 
 function []=plotError(t,yerr,yerr_mean,yerr_var,Model1Name,Model2Name)
