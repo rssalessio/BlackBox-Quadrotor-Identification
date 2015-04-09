@@ -87,8 +87,11 @@ function [finalModel,save] = identify(data, opt)
     elseif strcmp(opt.cost, 'aic')
         J = inf;
         opt.validate = 0;
-    elseif strcmp(opt.cost, 'fit')
-        J = 100;
+    elseif strcmp(opt.cost, 'fit') || strcmp(opt.cost, 'mfit') || strcmp(opt.cost, 'ifit') || strcmp(opt.cost, 'sfit')
+        J = Inf;
+        if (strcmp(opt.cost,'fit')==0 && opt.validate==0)
+            error('mfit and ifit available only with validate');
+        end
     else
         error('Invalid cost objective, check identifyOptions');
     end
@@ -100,6 +103,8 @@ function [finalModel,save] = identify(data, opt)
     timeSteps = zeros(totalComp,1);
     progress = 0;
     reverseStr = '';
+    
+    
     for na=opt.minOrders(1):opt.maxOrders(1)
         for nb=opt.minOrders(2):opt.maxOrders(2)
             for nc=opt.minOrders(3):opt.maxOrders(3)

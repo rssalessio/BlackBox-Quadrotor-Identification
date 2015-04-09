@@ -77,18 +77,19 @@ function []=plotOutput(t,y,ysim1,ysim2,Model1Name,Model2Name)
 %Plot output comparisons
     figure; 
     subplot(3,1,1);
-    plot(t,y,t,ysim1); axis([0, length(t), min([y;ysim1]), max([y;ysim1])+8]);grid; legend('Data', Model1Name); xlabel('Time'); ylabel('Output');title('Simulation Output Comparison');hold on;
-    J=fit(y,ysim1);
+    plot(t,y,t,ysim1); axis([0, length(t), min([y;ysim1]), max([y;ysim1])+8]);grid;  xlabel('Time'); ylabel('Output');title('Simulation Output Comparison');hold on;
+    hold on; plot(t,y+meanSegments(abs(y),0.3),'--'); hold on; plot(t,y-meanSegments(abs(y),0.3),'--');legend('Data', Model1Name,'DataSup', 'DataInf');
+    [J,e1]=fit(y,ysim1,1,0.3);
     text(0,max(y),['Fit: ' num2str(J) ' %']);hold on;
-    
     subplot(3,1,2);
-    plot(t,y,t,ysim2); axis([0, length(t), min([y;ysim2]), max([y;ysim2])+8]);grid; legend('Data',Model2Name); xlabel('Time'); ylabel('Output');
-    J=fit(y,ysim2);
+    plot(t,y,t,ysim2); axis([0, length(t), min([y;ysim2]), max([y;ysim2])+8]);grid;  xlabel('Time'); ylabel('Output');
+    hold on; plot(t,y+meanSegments(abs(y),0.3),'--'); hold on; plot(t,y-meanSegments(abs(y),0.3),'--'); legend('Data',Model2Name,'DataSup', 'DataInf');
+    [J,e2]=fit(y,ysim2,1,0.5);
     text(0,max(y),['Fit: ' num2str(J) ' %']);hold on;
-    
     subplot(3,1,3);
     plot(t,y,t,ysim1,t,ysim2);axis([0, length(t), min([ysim2;ysim1]), max([ysim2;ysim1])+8]);grid; legend('Data', Model1Name, Model2Name); xlabel('Time'); ylabel('Output');   
-    
+    figure;
+    subplot(211); plot(e1); subplot(212); plot(e2);
 end
 
 function []=plotPower(y,ysim1,ysim2,u)

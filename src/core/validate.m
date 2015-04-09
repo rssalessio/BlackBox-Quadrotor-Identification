@@ -7,7 +7,13 @@ function [J] = validate(idModel, data, costfunc,opt)
     elseif strcmp(costfunc, 'max') %minimise max absolute error
         J = max(abs(eps));
     elseif strcmp(costfunc, 'fit') 
-        J=fit(data.OutputData,ysim);
+        J=100-fit(data.OutputData,ysim,0,0);
+    elseif strcmp(costfunc, 'mfit')
+        J = 100-fit(data.OutputData,ysim,1,0.1);
+    elseif strcmp(costfunc, 'ifit')
+        J= fit(data.OutputData,ysim,2,0);
+    elseif strcmp(costfunc, 'sfit')
+        J= fit(data.OutputData,ysim,3,0);
     else
         error('Bad cost function');
     end
