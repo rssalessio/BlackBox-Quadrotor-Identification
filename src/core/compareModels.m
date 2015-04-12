@@ -1,4 +1,4 @@
-function [save]=compare(data,Model1,Model2,AddNoise)
+function [save]=compareModels(data,Model1,Model2,AddNoise)
 % compare(u,y, model1, model2) performs a simulation comparison between
 % the 1st model and the 2nd model, based on input and output data (u,y)
 %
