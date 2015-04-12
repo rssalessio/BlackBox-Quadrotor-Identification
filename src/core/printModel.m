@@ -5,6 +5,11 @@ function [] = printModel(model)
         b = num2str(model.b);
         c = num2str(model.c);
         d = num2str( sum(model.b == 0) );
+        f = num2str(model.f);
+        
+        if strcmp(model.Report.Method,'OE')
+            a = f;
+        end
         
         disp(['A(z): ' a]);
         disp(['B(z): ' b]);
