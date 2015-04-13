@@ -4,7 +4,8 @@ close all, clear, clc
 [data,~,~] = loaddata();
 
 IdOptions = identifyOptions();
-IdOptions.output = 0;
+    IdOptions.output = 0;
+    IdOptions.modelType = 'oe';
 SimOptions = simOptions();
 
 models = cell(3,1);
@@ -16,12 +17,10 @@ for i=1:3
     [models{i},~] = identify(training, IdOptions);
     printModel( models{i} );
     
-    for j=1:3       
-        if i ~= j                            
-            validation = data{3,j};           
+    for j=1:3                                   
+            validation = data{1,j};           
             J(i,j) = validate(models{i}, validation, IdOptions.cost, SimOptions);           
             disp(['Validation on ' num2str(j) ' exp: ' num2str(J(i,j))]);
-        end
     end
     disp(' ');
 end
@@ -33,6 +32,9 @@ legend('model1', 'model2', 'model3');
 
 for i=1:3
     figure; pzplot(models{i});
+end
+for i=1:3
     figure; step(models{i});
 end
 
+%save('../data/models/BJmodels.mat','models');

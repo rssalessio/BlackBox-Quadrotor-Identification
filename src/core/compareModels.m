@@ -57,7 +57,7 @@ function [Model1Name,Model2Name]=modelCheck(Model1,Model2)
     elseif isa(Model2,'idpoly')==1
         Model2Name = getDenomination(Model2);
     else
-        error('Model1 must be either a ss model or idpoly');
+        error('Model2 must be either a ss model or idpoly');
     end
 end
 
