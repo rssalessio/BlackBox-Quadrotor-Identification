@@ -24,8 +24,10 @@ function [g] = craAnalysis(data)
     g = Cyu/lambda;
     
     figure;
+    subplot 211;
     plot(0:1:19,g(1:20)); grid; hold on;
     gmat=cra(data); legend('CraAnalysis (AR30)','Matlab CRA (AR10)');
-    
-
+    subplot 212;
+    h = impulseplot(impulseest(data),4);
+    showConfidence(h,3);
 end
