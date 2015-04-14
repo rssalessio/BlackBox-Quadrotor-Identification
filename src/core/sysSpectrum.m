@@ -20,9 +20,15 @@ function [W,omega] = sysSpectrum(tfsys)
        W(n) = abs(tempnum)^2 / abs(tempden)^2;
     end
     figure;
+    subplot 211;
     plot(omega, W);
     axis([-pi pi min(W) max(W)]); grid;
     xlabel('\omega');
     ylabel('|W(e^{i\omega})|^2');
+    title('System spectrum');
+    subplot 212
+    semilogx(omega(omega>0),20*log10(W(omega>0))); grid;
+    xlabel('\omega');
+    ylabel('20 log_{10}(|W(e^{i\omega})|^2)');
     title('System spectrum');
 end

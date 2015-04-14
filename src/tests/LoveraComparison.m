@@ -3,7 +3,7 @@ close all, clear all
 [data,lovera,Ts] = loaddata();
 oe = load('../data/models/OEmodels.mat', 'models'); oe = oe.models;
 
-%compareModels(data{1,1},oe{1},lovera,0);
+compareModels(data{1,1},oe{1},idpoly(lovera),0);
 
 
 for i=1:3
