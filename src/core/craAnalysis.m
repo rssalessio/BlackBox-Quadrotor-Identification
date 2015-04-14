@@ -24,10 +24,14 @@ function [g] = craAnalysis(data)
     g = Cyu/lambda;
     
     figure;
-    subplot 211;
-    plot(0:1:19,g(1:20)); grid; hold on;
-    gmat=cra(data); legend('CraAnalysis (AR30)','Matlab CRA (AR10)');
-    subplot 212;
+    subplot 311;
+    plot(0:1:19,g(1:20)); grid; hold on; plot(cumsum(g(1:20)));
+    gmat=cra(data); hold on; plot(cumsum(gmat(1:20))); legend('CraAnalysis (AR30)','Integration of CraAnalysis','Matlab CRA (AR10)','Integration of M. CRA');
+    subplot 312;
     h = impulseplot(impulseest(data),4);
-    showConfidence(h,3);
+    showConfidence(h,3); grid;
+    
+    subplot 313
+    yimp=impulse(impulseest(data));
+    hold on; plot(cumsum(yimp(1:60))); grid; title('Integration of impulse fir estimation');
 end
