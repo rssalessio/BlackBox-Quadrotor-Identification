@@ -1,11 +1,13 @@
 close all, clear, clc
-%read comments to see analysis of results
 
 [data,~,~] = loaddata();
 
 IdOptions = identifyOptions();
     IdOptions.output = 0;
     IdOptions.modelType = 'oe';
+    IdOptions.target = 'simulation';
+    IdOptions.minOrders = [ 1 1 1 1 2];
+    IdOptions.maxOrders = [ 5 5 5 5 3];
 SimOptions = simOptions();
 
 models = cell(3,1);
@@ -37,4 +39,4 @@ for i=1:3
     figure; step(models{i});
 end
 
-%save('../data/models/BJmodels.mat','models');
+save('../data/models/OEmodels.mat','models');

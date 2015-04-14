@@ -10,9 +10,9 @@ models2 = load('../data/models/OEmodels.mat', 'models');
 models1 = models1.models;
 models2 = models2.models;
 
-for i=1:3
-    disp(['Validation ' num2str(i) ': ' num2str(models1{i}.NoiseVariance) ' - ' num2str(models2{i}.NoiseVariance) ]);
-end
+% for i=1:3
+%     disp(['Validation ' num2str(i) ': ' num2str(models1{i}.NoiseVariance) ' - ' num2str(models2{i}.NoiseVariance) ]);
+% end
 
 % arxinfo = cell(3,1);
 % oeinfo = cell(3,1);
@@ -51,9 +51,9 @@ end
 % end
 % legend('model1','model2','model3');
 % 
-% figure; hold on;
+ figure; hold on;
 for i=1:3
     step(models1{i});
     step(models2{i});
 end
-legend('ARXmodel1','OEmodel1','ARXmodel2','OEmodel2','ARXmodel3','OEmodel3');
+%legend('ARXmodel1','OEmodel1','ARXmodel2','OEmodel2','ARXmodel3','OEmodel3');
