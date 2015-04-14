@@ -40,6 +40,11 @@ classdef inspectSignal
            
            Fs=1/Ts;
            Cyx = Cyx(tau >= 0);
+           
+           figure;
+           bode(etfe(data), spa(data)); grid; legend('Frequency spectrum', 'Spectrum windows with tukey');
+           
+           
         end
         
         function [result,ratio,tolerances] = isWhite(process, alpha, samples, opt, plotTitle)

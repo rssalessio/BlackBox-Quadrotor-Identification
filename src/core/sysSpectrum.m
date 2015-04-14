@@ -27,8 +27,8 @@ function [W,omega] = sysSpectrum(tfsys)
     ylabel('|W(e^{i\omega})|^2');
     title('System spectrum');
     subplot 212
-    semilogx(omega(omega>0),20*log10(W(omega>0))); grid;
+    semilogx(omega(omega>0),10*log10(W(omega>0))); grid;
     xlabel('\omega');
-    ylabel('20 log_{10}(|W(e^{i\omega})|^2)');
+    ylabel('10 log_{10}(|W(e^{i\omega})|^2)');
     title('System spectrum');
 end
