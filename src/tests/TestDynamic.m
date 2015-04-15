@@ -4,10 +4,8 @@ close all;
 % different model, an idea might be to see how the true system reacts to the
 % a step response.
 
-models1 = load('../data/models/pred/ARXmodels.mat', 'models'); models1 = models1.models;
-models2 = load('../data/models/sim/ARXmodels.mat', 'models'); models2 = models2.models;
-
-
+models1 = load('../data/models/sim/ARXmodels.mat', 'models'); models1 = models1.models;
+models2 = load('../data/models/sim/OEmodels.mat', 'models'); models2 = models2.models;
 
 
 % for i=1:3
