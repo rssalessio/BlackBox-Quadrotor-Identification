@@ -4,11 +4,11 @@ close all;
 % different model, an idea might be to see how the true system reacts to the
 % a step response.
 
-models1 = load('../data/models/ARXmodels.mat', 'models');
-models2 = load('../data/models/OEmodels.mat', 'models');
+models1 = load('../data/models/pred/ARXmodels.mat', 'models'); models1 = models1.models;
+models2 = load('../data/models/sim/ARXmodels.mat', 'models'); models2 = models2.models;
 
-models1 = models1.models;
-models2 = models2.models;
+
+
 
 % for i=1:3
 %     disp(['Validation ' num2str(i) ': ' num2str(models1{i}.NoiseVariance) ' - ' num2str(models2{i}.NoiseVariance) ]);
@@ -39,11 +39,11 @@ end
 %     figure; pzplot(models2{i});
 % end
 
-% figure; hold on;
-% for i=1:3
-%     step(models1{i});
-% end
-% legend('model1','model2','model3');
+figure; hold on;
+for i=1:3
+    step(models1{i});
+end
+legend('model1','model2','model3');
 % 
 % figure; hold on;
 % for i=1:3
