@@ -37,21 +37,21 @@ end
 %     figure; pzplot(models2{i});
 % end
 
-figure; hold on;
-for i=1:3
-    step(models1{i});
-end
-legend('model1','model2','model3');
+% figure; hold on;
+% for i=1:3
+%     step(models1{i});
+% end
+% legend('model1','model2','model3');
 % 
 % figure; hold on;
 % for i=1:3
 %     step(models2{i});
 % end
 % legend('model1','model2','model3');
-% 
- figure; hold on;
-for i=1:3
-    step(models1{i});
-    step(models2{i});
-end
+% % 
+%  figure; hold on;
+% for i=1:3
+%     step(models1{i});
+%     step(models2{i});
+% end
 %legend('ARXmodel1','OEmodel1','ARXmodel2','OEmodel2','ARXmodel3','OEmodel3');
