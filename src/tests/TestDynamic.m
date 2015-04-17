@@ -4,8 +4,8 @@ close all;
 % different model, an idea might be to see how the true system reacts to the
 % a step response.
 
-models1 = load('../data/models/sim/ARXmodels.mat', 'models'); models1 = models1.models;
-models2 = load('../data/models/sim/OEmodels.mat', 'models'); models2 = models2.models;
+models1 = load('../data/models/sim/OE23model.mat', 'oe23'); models1 = models1.models;
+models2 = load('../data/models/sim/OE23IDmodel.mat', 'oe23id'); models2 = models2.models;
 
 
 % for i=1:3
@@ -49,9 +49,9 @@ end
 % end
 % legend('model1','model2','model3');
 % % 
-%  figure; hold on;
-% for i=1:3
-%     step(models1{i});
-%     step(models2{i});
-% end
+ figure; hold on;
+for i=1:3
+    step(models1{i});
+    step(models2{i});
+end
 %legend('ARXmodel1','OEmodel1','ARXmodel2','OEmodel2','ARXmodel3','OEmodel3');

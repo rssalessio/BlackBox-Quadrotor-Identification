@@ -150,6 +150,9 @@ function [finalModel,save] = identify(data, opt)
                                 return;
                             end
                         end
+                        
+                        disp([num2str(na) num2str(nb) num2str(nc) num2str(nd) num2str(nk) ' ' num2str(Jtemp)]);
+                        
                         progress = progress+1;
                         t2=clock();
                         timeSteps(progress) = t2(6)-t1(6);

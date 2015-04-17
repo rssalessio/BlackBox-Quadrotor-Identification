@@ -4,10 +4,10 @@ close all, clear, clc
 
 IdOptions = identifyOptions();
     IdOptions.output = 0;
-    IdOptions.modelType = 'arx';
+    IdOptions.modelType = 'oe';
     IdOptions.target = 'simulation';
-    IdOptions.minOrders = [ 1 1 1 1 2];
-    IdOptions.maxOrders = [ 5 5 5 5 3];
+    IdOptions.minOrders = [ 2 3 1 1 2];
+    IdOptions.maxOrders = [ 2 3 1 1 2];
 SimOptions = simOptions();
 
 models = cell(3,1);
@@ -41,4 +41,4 @@ for i=1:3
     step(models{i});
 end
 
-save('../data/models/sim/ARXmodels.mat','models');
+save('../data/models/sim/OE23IDmodel.mat','oe23id');
