@@ -1,14 +1,14 @@
 close all, clear all
 
 [data,lovera,Ts] = loaddata();
-oe = load('../data/models/OEmodels.mat', 'models'); oe = oe.models;
+oe23 = load('../data/models/sim/OE23IDmodel.mat', 'oe23id'); oe23 = oe23.oe23id;
+oe35 = load('../data/models/sim/OEmodels.mat','models'); oe35 = oe35.models{1};
 
-compareModels(data{1,1},oe{1},idpoly(lovera),0);
+compareModels(data{1,1},oe23,idpoly(lovera),0);
+compareModels(data{1,1},oe35,idpoly(lovera),0);
 
-
-for i=1:3
-    disp(['Lovera: ' num2str( esr(lovera,data{1,i}) ), ...
-            '   OE1: ' num2str( esr(oe{1},data{1,i}) ), ...
-            '   OE2: ' num2str( esr(oe{2},data{1,i}) ), ...
-            '   OE3: ' num2str( esr(oe{3},data{1,i}) )]);
-end
+disp(['Lovera: ' num2str( esr(lovera,data{1,1}) ), ...
+      '   OE35: ' num2str( esr(oe35,data{1,1}) ), ...
+      '   OE23: ' num2str( esr(oe23,data{1,1}) )]);
+  
+figure; step(lovera,oe23); legend('SS55', 'OE23');

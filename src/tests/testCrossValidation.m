@@ -4,10 +4,11 @@ close all, clear, clc
 
 IdOptions = identifyOptions();
     IdOptions.output = 0;
+    IdOptions.inputDelayAuto=false;
     IdOptions.modelType = 'oe';
     IdOptions.target = 'simulation';
-    IdOptions.minOrders = [ 2 3 1 1 2];
-    IdOptions.maxOrders = [ 2 3 1 1 2];
+    IdOptions.minOrders = [ 1 1 1 1 1];
+    IdOptions.maxOrders = [ 5 5 1 1 3];
 SimOptions = simOptions();
 
 models = cell(3,1);
