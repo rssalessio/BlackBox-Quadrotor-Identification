@@ -4,7 +4,7 @@ close all, clear, clc
 
 IdOptions = identifyOptions();
     IdOptions.output = 0;
-    IdOptions.inputDelayAuto=false;
+    IdOptions.inputDelayAuto=true;
     IdOptions.modelType = 'oe';
     IdOptions.target = 'simulation';
     IdOptions.minOrders = [ 1 1 1 1 1];
@@ -42,4 +42,4 @@ for i=1:3
     step(models{i});
 end
 
-save('../data/models/sim/OE23IDmodel.mat','oe23id');
+%save('../data/models/sim/OE23IDmodel.mat','oe23id');
